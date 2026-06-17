@@ -43,5 +43,16 @@
   "privacyPolicy": "개인정보 처리방침",
   "termsOfUse": "이용약관",
   "buddies": "버디",
-  "buddiesHint": "가끔 빼꼼 등장하는 깜찍한 캐릭터"
+  "buddiesHint": "가끔 빼꼼 등장하는 깜찍한 캐릭터",
+  "add": "추가",
+  "save": "저장",
+  "cancel": "취소",
+  "taskHint": "무엇을 해야 하나요?",
+  "comingSoon": "곧 출시됩니다",
+  "members": "멤버",
+  "chooseAvatar": "아바타 선택",
+  "signInRequired": "로그인이 필요합니다",
+  "deleteDataMessage": "목록, 작업, 친구가 초기화됩니다. 되돌릴 수 없습니다.",
+  "deleteAccountMessage": "계정이 영구적으로 삭제됩니다.",
+  "dataDeleted": "데이터가 삭제되었습니다"
 }

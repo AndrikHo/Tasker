@@ -46,5 +46,16 @@
   "privacyPolicy": "Privacy Policy",
   "termsOfUse": "Terms of Use",
   "buddies": "Buddies",
-  "buddiesHint": "Playful characters that peek in now and then"
+  "buddiesHint": "Playful characters that peek in now and then",
+  "add": "Add",
+  "save": "Save",
+  "cancel": "Cancel",
+  "taskHint": "What needs doing?",
+  "comingSoon": "Coming soon",
+  "members": "Members",
+  "chooseAvatar": "Choose avatar",
+  "signInRequired": "Sign in required",
+  "deleteDataMessage": "This resets your lists, tasks and friends. This cannot be undone.",
+  "deleteAccountMessage": "This permanently deletes your account.",
+  "dataDeleted": "Data deleted"
 }

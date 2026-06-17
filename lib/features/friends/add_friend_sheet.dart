@@ -3,7 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/providers/settings_provider.dart';
 import '../../core/theme/app_style.dart';
+import '../../core/widgets/feedback.dart';
 import '../../l10n/app_localizations.dart';
+import '../tasks/task_providers.dart';
 
 /// Sheet for adding a friend by account id (ids start at #0). Visual only
 /// until friends are backed by Supabase.
@@ -21,11 +23,34 @@ Future<void> showAddFriendSheet(BuildContext context) {
   );
 }
 
-class _AddFriendSheet extends ConsumerWidget {
+class _AddFriendSheet extends ConsumerStatefulWidget {
   const _AddFriendSheet();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_AddFriendSheet> createState() => _AddFriendSheetState();
+}
+
+class _AddFriendSheetState extends ConsumerState<_AddFriendSheet> {
+  final _controller = TextEditingController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _add() {
+    final id = _controller.text.trim().replaceAll('#', '');
+    if (id.isEmpty) {
+      Navigator.pop(context);
+      return;
+    }
+    ref.read(friendsProvider.notifier).addById(id);
+    Navigator.pop(context);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final style = ref.watch(styleProvider);
     final scheme = Theme.of(context).colorScheme;
@@ -49,7 +74,11 @@ class _AddFriendSheet extends ConsumerWidget {
               children: [
                 Expanded(
                   child: TextField(
+                    controller: _controller,
+                    autofocus: true,
                     keyboardType: TextInputType.number,
+                    textInputAction: TextInputAction.done,
+                    onSubmitted: (_) => _add(),
                     decoration: InputDecoration(
                       hintText: '#0',
                       prefixText: '#',
@@ -69,7 +98,7 @@ class _AddFriendSheet extends ConsumerWidget {
                 _SquareIconButton(
                   icon: Icons.qr_code_scanner,
                   color: scheme.onSurface,
-                  onTap: () {},
+                  onTap: () => showComingSoon(context, l10n.comingSoon),
                 ),
               ],
             ),
@@ -77,7 +106,7 @@ class _AddFriendSheet extends ConsumerWidget {
             SizedBox(
               width: double.infinity,
               child: FilledButton.icon(
-                onPressed: () => Navigator.pop(context),
+                onPressed: _add,
                 style: FilledButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),

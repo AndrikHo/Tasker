@@ -139,4 +139,38 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get buddiesHint => 'Verspielte Figuren, die ab und zu auftauchen';
+
+  @override
+  String get add => 'Hinzufügen';
+
+  @override
+  String get save => 'Speichern';
+
+  @override
+  String get cancel => 'Abbrechen';
+
+  @override
+  String get taskHint => 'Was ist zu tun?';
+
+  @override
+  String get comingSoon => 'Demnächst';
+
+  @override
+  String get members => 'Mitglieder';
+
+  @override
+  String get chooseAvatar => 'Avatar wählen';
+
+  @override
+  String get signInRequired => 'Anmeldung erforderlich';
+
+  @override
+  String get deleteDataMessage =>
+      'Dies setzt deine Listen, Aufgaben und Freunde zurück. Das kann nicht rückgängig gemacht werden.';
+
+  @override
+  String get deleteAccountMessage => 'Dies löscht dein Konto dauerhaft.';
+
+  @override
+  String get dataDeleted => 'Daten gelöscht';
 }

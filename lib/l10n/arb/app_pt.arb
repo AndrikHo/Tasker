@@ -43,5 +43,16 @@
   "privacyPolicy": "Política de Privacidade",
   "termsOfUse": "Termos de Utilização",
   "buddies": "Amiguinhos",
-  "buddiesHint": "Personagens que aparecem de vez em quando"
+  "buddiesHint": "Personagens que aparecem de vez em quando",
+  "add": "Adicionar",
+  "save": "Salvar",
+  "cancel": "Cancelar",
+  "taskHint": "O que precisa ser feito?",
+  "comingSoon": "Em breve",
+  "members": "Membros",
+  "chooseAvatar": "Escolher avatar",
+  "signInRequired": "Login necessário",
+  "deleteDataMessage": "Isso redefine suas listas, tarefas e amigos. Não pode ser desfeito.",
+  "deleteAccountMessage": "Isso exclui sua conta permanentemente.",
+  "dataDeleted": "Dados excluídos"
 }

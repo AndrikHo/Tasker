@@ -139,4 +139,39 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get buddiesHint => 'Des personnages qui pointent le bout du nez';
+
+  @override
+  String get add => 'Ajouter';
+
+  @override
+  String get save => 'Enregistrer';
+
+  @override
+  String get cancel => 'Annuler';
+
+  @override
+  String get taskHint => 'Que faut-il faire ?';
+
+  @override
+  String get comingSoon => 'Bientôt disponible';
+
+  @override
+  String get members => 'Membres';
+
+  @override
+  String get chooseAvatar => 'Choisir un avatar';
+
+  @override
+  String get signInRequired => 'Connexion requise';
+
+  @override
+  String get deleteDataMessage =>
+      'Cela réinitialise vos listes, tâches et amis. Action irréversible.';
+
+  @override
+  String get deleteAccountMessage =>
+      'Cela supprime définitivement votre compte.';
+
+  @override
+  String get dataDeleted => 'Données supprimées';
 }

@@ -13,6 +13,9 @@ const _kThemeModeKey = 'theme_mode';
 const _kLocaleKey = 'locale';
 const _kStyleKey = 'app_style';
 const _kBuddiesKey = 'buddies_enabled';
+const _kProfileNameKey = 'profile_name';
+const _kProfileEmojiKey = 'profile_emoji';
+const _kProfileColorKey = 'profile_color';
 
 /// Theme mode (light / dark / system), persisted.
 class ThemeModeNotifier extends StateNotifier<ThemeMode> {
@@ -107,4 +110,68 @@ class BuddiesNotifier extends StateNotifier<bool> {
 final buddyEnabledProvider =
     StateNotifierProvider<BuddiesNotifier, bool>((ref) {
   return BuddiesNotifier(ref.watch(sharedPreferencesProvider));
+});
+
+/// The local user profile (display name + emoji/color avatar), persisted.
+/// A stand-in until Supabase auth provides the real account.
+@immutable
+class Profile {
+  const Profile({this.name, required this.emoji, required this.colorValue});
+
+  final String? name;
+  final String emoji;
+  final int colorValue;
+
+  Color get color => Color(colorValue);
+
+  Profile copyWith({String? name, String? emoji, int? colorValue}) => Profile(
+        name: name ?? this.name,
+        emoji: emoji ?? this.emoji,
+        colorValue: colorValue ?? this.colorValue,
+      );
+}
+
+class ProfileNotifier extends StateNotifier<Profile> {
+  ProfileNotifier(this._prefs) : super(_load(_prefs));
+
+  final SharedPreferences _prefs;
+
+  static const _defaultColor = 0xFF22D3EE;
+
+  static Profile _load(SharedPreferences prefs) {
+    final name = prefs.getString(_kProfileNameKey);
+    return Profile(
+      name: (name == null || name.isEmpty) ? null : name,
+      emoji: prefs.getString(_kProfileEmojiKey) ?? '🙂',
+      colorValue: prefs.getInt(_kProfileColorKey) ?? _defaultColor,
+    );
+  }
+
+  Future<void> setName(String name) async {
+    final trimmed = name.trim();
+    state = state.copyWith(name: trimmed.isEmpty ? null : trimmed);
+    if (trimmed.isEmpty) {
+      await _prefs.remove(_kProfileNameKey);
+    } else {
+      await _prefs.setString(_kProfileNameKey, trimmed);
+    }
+  }
+
+  Future<void> setAvatar({required String emoji, required int colorValue}) async {
+    state = state.copyWith(emoji: emoji, colorValue: colorValue);
+    await _prefs.setString(_kProfileEmojiKey, emoji);
+    await _prefs.setInt(_kProfileColorKey, colorValue);
+  }
+
+  Future<void> clear() async {
+    await _prefs.remove(_kProfileNameKey);
+    await _prefs.remove(_kProfileEmojiKey);
+    await _prefs.remove(_kProfileColorKey);
+    state = const Profile(emoji: '🙂', colorValue: _defaultColor);
+  }
+}
+
+final profileProvider =
+    StateNotifierProvider<ProfileNotifier, Profile>((ref) {
+  return ProfileNotifier(ref.watch(sharedPreferencesProvider));
 });

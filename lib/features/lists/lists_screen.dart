@@ -11,6 +11,24 @@ import '../../l10n/app_localizations.dart';
 import '../tasks/add_task_sheet.dart';
 import '../tasks/task_model.dart';
 import '../tasks/task_providers.dart';
+import 'new_list_sheet.dart';
+
+/// Resolves a list's display name: localized for the defaults, literal for
+/// user-created lists.
+String listDisplayName(TaskList list, AppLocalizations l10n) {
+  switch (list.nameKey) {
+    case 'personal':
+      return l10n.personalList;
+    case 'shared':
+      return l10n.sharedList;
+    case 'family':
+      return l10n.familyList;
+    case 'work':
+      return l10n.workList;
+    default:
+      return list.name ?? '';
+  }
+}
 
 /// Lists home, bento-style: an editorial greeting header, a list switcher
 /// strip, a big-number hero (percent + progress), an Active / New-task stat
@@ -25,37 +43,24 @@ class ListsScreen extends ConsumerStatefulWidget {
 class _ListsScreenState extends ConsumerState<ListsScreen> {
   int _selected = 0;
 
-  static const _kinds = ListKind.values;
-
-  static const _dotColors = <Color>[
-    Color(0xFF22D3EE),
-    Color(0xFF818CF8),
-    Color(0xFFFB7185),
-    Color(0xFFFBBF24),
-  ];
-
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final style = ref.watch(styleProvider);
     final tasksByList = ref.watch(tasksProvider);
-    final kind = _kinds[_selected];
+    final lists = ref.watch(listsProvider);
+    if (_selected >= lists.length) _selected = lists.length - 1;
+    final list = lists[_selected];
     final locale = Localizations.localeOf(context).toString();
     final date = DateFormat.MMMMEEEEd(locale).format(DateTime.now());
-    final names = [
-      l10n.personalList,
-      l10n.sharedList,
-      l10n.familyList,
-      l10n.workList,
-    ];
 
-    final tasks = tasksByList[kind] ?? const <TaskItem>[];
+    final tasks = tasksByList[list.id] ?? const <TaskItem>[];
     final active = tasks.where((t) => !t.done).toList();
     final done = tasks.where((t) => t.done).toList();
     final pct = tasks.isEmpty ? 0 : (done.length / tasks.length * 100).round();
 
     void toggle(TaskItem t) =>
-        ref.read(tasksProvider.notifier).toggle(kind, t.id, DemoMembers.me);
+        ref.read(tasksProvider.notifier).toggle(list.id, t.id, DemoMembers.me);
 
     return Scaffold(
       body: SafeArea(
@@ -70,23 +75,28 @@ class _ListsScreenState extends ConsumerState<ListsScreen> {
               ),
             ),
 
-            // List switcher strip.
+            // List switcher strip (lists + an add-list chip).
             SliverToBoxAdapter(
               child: SizedBox(
                 height: 48,
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.fromLTRB(kBentoPad, 8, kBentoPad, 0),
-                  itemCount: names.length,
+                  itemCount: lists.length + 1,
                   separatorBuilder: (_, _) => const SizedBox(width: 10),
                   itemBuilder: (context, i) {
-                    final count = (tasksByList[_kinds[i]] ?? const <TaskItem>[])
+                    if (i == lists.length) {
+                      return _AddListChip(
+                        onTap: () => showNewListSheet(context),
+                      );
+                    }
+                    final count = (tasksByList[lists[i].id] ?? const <TaskItem>[])
                         .where((t) => !t.done)
                         .length;
                     return _ListChip(
-                      label: names[i],
+                      label: listDisplayName(lists[i], l10n),
                       count: count,
-                      dot: _dotColors[i],
+                      dot: lists[i].color,
                       selected: i == _selected,
                       onTap: () => setState(() => _selected = i),
                     );
@@ -102,7 +112,7 @@ class _ListsScreenState extends ConsumerState<ListsScreen> {
                 child: Column(
                   children: [
                     _HeroTile(
-                      listName: names[_selected],
+                      listName: listDisplayName(list, l10n),
                       pct: pct,
                       done: done.length,
                       total: tasks.length,
@@ -123,7 +133,7 @@ class _ListsScreenState extends ConsumerState<ListsScreen> {
                         Expanded(
                           child: BentoAddTile(
                             label: l10n.newTask,
-                            onTap: () => showAddTaskSheet(context),
+                            onTap: () => showAddTaskSheet(context, list.id),
                           ),
                         ),
                       ],
@@ -376,6 +386,34 @@ class _ListChip extends ConsumerWidget {
             ],
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// Trailing chip in the switcher strip that opens the new-list sheet.
+class _AddListChip extends ConsumerWidget {
+  const _AddListChip({required this.onTap});
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final style = ref.watch(styleProvider);
+    final dark = Theme.of(context).brightness == Brightness.dark;
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: (dark ? Colors.white : Colors.black).withValues(alpha: 0.04),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: style.accent.withValues(alpha: 0.5),
+            width: 1.5,
+          ),
+        ),
+        child: Icon(Icons.add_rounded, size: 20, color: style.accent),
       ),
     );
   }

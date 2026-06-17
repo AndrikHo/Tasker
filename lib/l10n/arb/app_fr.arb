@@ -43,5 +43,16 @@
   "privacyPolicy": "Politique de confidentialité",
   "termsOfUse": "Conditions d'utilisation",
   "buddies": "Copains",
-  "buddiesHint": "Des personnages qui pointent le bout du nez"
+  "buddiesHint": "Des personnages qui pointent le bout du nez",
+  "add": "Ajouter",
+  "save": "Enregistrer",
+  "cancel": "Annuler",
+  "taskHint": "Que faut-il faire ?",
+  "comingSoon": "Bientôt disponible",
+  "members": "Membres",
+  "chooseAvatar": "Choisir un avatar",
+  "signInRequired": "Connexion requise",
+  "deleteDataMessage": "Cela réinitialise vos listes, tâches et amis. Action irréversible.",
+  "deleteAccountMessage": "Cela supprime définitivement votre compte.",
+  "dataDeleted": "Données supprimées"
 }

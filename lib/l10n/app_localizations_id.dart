@@ -139,4 +139,38 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get buddiesHint => 'Karakter jenaka yang sesekali mengintip';
+
+  @override
+  String get add => 'Tambah';
+
+  @override
+  String get save => 'Simpan';
+
+  @override
+  String get cancel => 'Batal';
+
+  @override
+  String get taskHint => 'Apa yang perlu dilakukan?';
+
+  @override
+  String get comingSoon => 'Segera hadir';
+
+  @override
+  String get members => 'Anggota';
+
+  @override
+  String get chooseAvatar => 'Pilih avatar';
+
+  @override
+  String get signInRequired => 'Perlu masuk';
+
+  @override
+  String get deleteDataMessage =>
+      'Ini akan mengatur ulang daftar, tugas, dan teman Anda. Tidak dapat dibatalkan.';
+
+  @override
+  String get deleteAccountMessage => 'Ini menghapus akun Anda secara permanen.';
+
+  @override
+  String get dataDeleted => 'Data dihapus';
 }

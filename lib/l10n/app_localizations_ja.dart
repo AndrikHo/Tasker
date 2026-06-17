@@ -139,4 +139,37 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get buddiesHint => 'ときどき顔を出す愉快なキャラクター';
+
+  @override
+  String get add => '追加';
+
+  @override
+  String get save => '保存';
+
+  @override
+  String get cancel => 'キャンセル';
+
+  @override
+  String get taskHint => '何をしますか？';
+
+  @override
+  String get comingSoon => '近日公開';
+
+  @override
+  String get members => 'メンバー';
+
+  @override
+  String get chooseAvatar => 'アバターを選択';
+
+  @override
+  String get signInRequired => 'サインインが必要です';
+
+  @override
+  String get deleteDataMessage => 'リスト、タスク、友だちがリセットされます。元に戻せません。';
+
+  @override
+  String get deleteAccountMessage => 'アカウントが完全に削除されます。';
+
+  @override
+  String get dataDeleted => 'データを削除しました';
 }

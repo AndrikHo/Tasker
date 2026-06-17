@@ -139,4 +139,38 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get buddiesHint => 'कभी-कभी झांकने वाले मज़ेदार किरदार';
+
+  @override
+  String get add => 'जोड़ें';
+
+  @override
+  String get save => 'सहेजें';
+
+  @override
+  String get cancel => 'रद्द करें';
+
+  @override
+  String get taskHint => 'क्या करना है?';
+
+  @override
+  String get comingSoon => 'जल्द आ रहा है';
+
+  @override
+  String get members => 'सदस्य';
+
+  @override
+  String get chooseAvatar => 'अवतार चुनें';
+
+  @override
+  String get signInRequired => 'साइन इन आवश्यक है';
+
+  @override
+  String get deleteDataMessage =>
+      'इससे आपकी सूचियाँ, कार्य और मित्र रीसेट हो जाएँगे। इसे पूर्ववत नहीं किया जा सकता।';
+
+  @override
+  String get deleteAccountMessage => 'इससे आपका खाता स्थायी रूप से हट जाएगा।';
+
+  @override
+  String get dataDeleted => 'डेटा हटा दिया गया';
 }

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/providers/settings_provider.dart';
 import '../../core/theme/app_style.dart';
 import '../../l10n/app_localizations.dart';
+import '../tasks/task_providers.dart';
 
 /// Sheet for creating a new list: name, color and an icon. Visual only for
 /// now (no persistence until lists are backed by Supabase).
@@ -47,8 +48,25 @@ class _NewListSheet extends ConsumerStatefulWidget {
 }
 
 class _NewListSheetState extends ConsumerState<_NewListSheet> {
+  final _controller = TextEditingController();
   int _color = 0;
   int _icon = 0;
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _create(String fallback) {
+    final name = _controller.text.trim();
+    ref.read(listsProvider.notifier).add(
+          name: name.isEmpty ? fallback : name,
+          color: _palette[_color],
+          icon: _icons[_icon],
+        );
+    Navigator.pop(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +90,10 @@ class _NewListSheetState extends ConsumerState<_NewListSheet> {
             ),
             const SizedBox(height: 18),
             TextField(
-              autofocus: false,
+              controller: _controller,
+              autofocus: true,
+              textInputAction: TextInputAction.done,
+              onSubmitted: (_) => _create(l10n.newList),
               decoration: InputDecoration(
                 hintText: l10n.newList,
                 prefixIcon: Icon(_icons[_icon], color: accent),
@@ -110,7 +131,7 @@ class _NewListSheetState extends ConsumerState<_NewListSheet> {
             SizedBox(
               width: double.infinity,
               child: FilledButton.icon(
-                onPressed: () => Navigator.pop(context),
+                onPressed: () => _create(l10n.newList),
                 style: FilledButton.styleFrom(
                   backgroundColor: accent,
                   foregroundColor: accent.computeLuminance() > 0.5

@@ -139,4 +139,38 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get buddiesHint => 'Personagens que aparecem de vez em quando';
+
+  @override
+  String get add => 'Adicionar';
+
+  @override
+  String get save => 'Salvar';
+
+  @override
+  String get cancel => 'Cancelar';
+
+  @override
+  String get taskHint => 'O que precisa ser feito?';
+
+  @override
+  String get comingSoon => 'Em breve';
+
+  @override
+  String get members => 'Membros';
+
+  @override
+  String get chooseAvatar => 'Escolher avatar';
+
+  @override
+  String get signInRequired => 'Login necessário';
+
+  @override
+  String get deleteDataMessage =>
+      'Isso redefine suas listas, tarefas e amigos. Não pode ser desfeito.';
+
+  @override
+  String get deleteAccountMessage => 'Isso exclui sua conta permanentemente.';
+
+  @override
+  String get dataDeleted => 'Dados excluídos';
 }

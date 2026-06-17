@@ -139,4 +139,38 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get buddiesHint => 'شخصيات مرحة تطل بين الحين والآخر';
+
+  @override
+  String get add => 'إضافة';
+
+  @override
+  String get save => 'حفظ';
+
+  @override
+  String get cancel => 'إلغاء';
+
+  @override
+  String get taskHint => 'ما الذي يجب فعله؟';
+
+  @override
+  String get comingSoon => 'قريبًا';
+
+  @override
+  String get members => 'الأعضاء';
+
+  @override
+  String get chooseAvatar => 'اختر الصورة الرمزية';
+
+  @override
+  String get signInRequired => 'تسجيل الدخول مطلوب';
+
+  @override
+  String get deleteDataMessage =>
+      'سيؤدي هذا إلى إعادة تعيين قوائمك ومهامك وأصدقائك. لا يمكن التراجع عن ذلك.';
+
+  @override
+  String get deleteAccountMessage => 'سيؤدي هذا إلى حذف حسابك نهائيًا.';
+
+  @override
+  String get dataDeleted => 'تم حذف البيانات';
 }

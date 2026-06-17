@@ -10,6 +10,7 @@ import '../../l10n/app_localizations.dart';
 import '../tasks/task_model.dart';
 import '../tasks/task_providers.dart';
 import 'add_friend_sheet.dart';
+import 'friend_detail_sheet.dart';
 
 /// Friends and groups, bento-style: an editorial header, a Friends-count /
 /// Add-friend stat row, the friends as clean rows, and the shared groups as
@@ -21,11 +22,7 @@ class FriendsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
 
-    const friends = <Member>[
-      DemoMembers.wife,
-      DemoMembers.son,
-      DemoMembers.coworker,
-    ];
+    final friends = ref.watch(friendsProvider);
     final groups = <_Group>[
       _Group(l10n.familyList, const [
         DemoMembers.me,
@@ -165,7 +162,7 @@ class _FriendRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return InkWell(
-      onTap: () {},
+      onTap: () => showFriendDetailSheet(context, member),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Row(
@@ -201,7 +198,7 @@ class _GroupTile extends ConsumerWidget {
     final theme = Theme.of(context);
     final style = ref.watch(styleProvider);
     return BentoTile(
-      onTap: () {},
+      onTap: () => showGroupDetailSheet(context, group.name, group.members),
       child: Row(
         children: [
           Container(

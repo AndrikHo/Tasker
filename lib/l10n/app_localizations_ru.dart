@@ -139,4 +139,38 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get buddiesHint => 'Игривые персонажи, что иногда заглядывают';
+
+  @override
+  String get add => 'Добавить';
+
+  @override
+  String get save => 'Сохранить';
+
+  @override
+  String get cancel => 'Отмена';
+
+  @override
+  String get taskHint => 'Что нужно сделать?';
+
+  @override
+  String get comingSoon => 'Скоро';
+
+  @override
+  String get members => 'Участники';
+
+  @override
+  String get chooseAvatar => 'Выберите аватар';
+
+  @override
+  String get signInRequired => 'Требуется вход';
+
+  @override
+  String get deleteDataMessage =>
+      'Списки, задачи и друзья будут сброшены. Это нельзя отменить.';
+
+  @override
+  String get deleteAccountMessage => 'Это навсегда удалит вашу учётную запись.';
+
+  @override
+  String get dataDeleted => 'Данные удалены';
 }

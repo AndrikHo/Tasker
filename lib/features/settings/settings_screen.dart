@@ -34,6 +34,7 @@ class SettingsScreen extends ConsumerWidget {
     final themeMode = ref.watch(themeModeProvider);
     final style = ref.watch(styleProvider);
     final buddies = ref.watch(buddyEnabledProvider);
+    final profile = ref.watch(profileProvider);
     final locale = ref.watch(localeProvider);
     final langLabel =
         locale == null ? null : supportedLanguages[locale.languageCode];
@@ -53,7 +54,7 @@ class SettingsScreen extends ConsumerWidget {
                   SettingsTile(
                     icon: Icons.person_outline,
                     title: l10n.account,
-                    subtitle: '#0',
+                    subtitle: profile.name == null ? '#0' : '${profile.name}  ·  #0',
                     onTap: () => context.go('/settings/account'),
                   ),
                 ],

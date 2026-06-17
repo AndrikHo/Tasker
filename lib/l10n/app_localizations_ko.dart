@@ -139,4 +139,37 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get buddiesHint => '가끔 빼꼼 등장하는 깜찍한 캐릭터';
+
+  @override
+  String get add => '추가';
+
+  @override
+  String get save => '저장';
+
+  @override
+  String get cancel => '취소';
+
+  @override
+  String get taskHint => '무엇을 해야 하나요?';
+
+  @override
+  String get comingSoon => '곧 출시됩니다';
+
+  @override
+  String get members => '멤버';
+
+  @override
+  String get chooseAvatar => '아바타 선택';
+
+  @override
+  String get signInRequired => '로그인이 필요합니다';
+
+  @override
+  String get deleteDataMessage => '목록, 작업, 친구가 초기화됩니다. 되돌릴 수 없습니다.';
+
+  @override
+  String get deleteAccountMessage => '계정이 영구적으로 삭제됩니다.';
+
+  @override
+  String get dataDeleted => '데이터가 삭제되었습니다';
 }

@@ -381,6 +381,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Playful characters that peek in now and then'**
   String get buddiesHint;
+
+  /// No description provided for @add.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get add;
+
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @taskHint.
+  ///
+  /// In en, this message translates to:
+  /// **'What needs doing?'**
+  String get taskHint;
+
+  /// No description provided for @comingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Coming soon'**
+  String get comingSoon;
+
+  /// No description provided for @members.
+  ///
+  /// In en, this message translates to:
+  /// **'Members'**
+  String get members;
+
+  /// No description provided for @chooseAvatar.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose avatar'**
+  String get chooseAvatar;
+
+  /// No description provided for @signInRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in required'**
+  String get signInRequired;
+
+  /// No description provided for @deleteDataMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'This resets your lists, tasks and friends. This cannot be undone.'**
+  String get deleteDataMessage;
+
+  /// No description provided for @deleteAccountMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'This permanently deletes your account.'**
+  String get deleteAccountMessage;
+
+  /// No description provided for @dataDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Data deleted'**
+  String get dataDeleted;
 }
 
 class _AppLocalizationsDelegate

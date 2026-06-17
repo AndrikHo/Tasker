@@ -43,5 +43,16 @@
   "privacyPolicy": "プライバシーポリシー",
   "termsOfUse": "利用規約",
   "buddies": "バディ",
-  "buddiesHint": "ときどき顔を出す愉快なキャラクター"
+  "buddiesHint": "ときどき顔を出す愉快なキャラクター",
+  "add": "追加",
+  "save": "保存",
+  "cancel": "キャンセル",
+  "taskHint": "何をしますか？",
+  "comingSoon": "近日公開",
+  "members": "メンバー",
+  "chooseAvatar": "アバターを選択",
+  "signInRequired": "サインインが必要です",
+  "deleteDataMessage": "リスト、タスク、友だちがリセットされます。元に戻せません。",
+  "deleteAccountMessage": "アカウントが完全に削除されます。",
+  "dataDeleted": "データを削除しました"
 }

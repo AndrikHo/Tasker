@@ -139,4 +139,37 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get buddiesHint => '时不时探头的俏皮角色';
+
+  @override
+  String get add => '添加';
+
+  @override
+  String get save => '保存';
+
+  @override
+  String get cancel => '取消';
+
+  @override
+  String get taskHint => '需要做什么？';
+
+  @override
+  String get comingSoon => '敬请期待';
+
+  @override
+  String get members => '成员';
+
+  @override
+  String get chooseAvatar => '选择头像';
+
+  @override
+  String get signInRequired => '需要登录';
+
+  @override
+  String get deleteDataMessage => '这将重置您的列表、任务和好友。此操作无法撤消。';
+
+  @override
+  String get deleteAccountMessage => '这将永久删除您的账户。';
+
+  @override
+  String get dataDeleted => '数据已删除';
 }
