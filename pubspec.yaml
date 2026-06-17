@@ -1,0 +1,44 @@
+name: tasker
+description: "Tasker - collaborative task lists with widgets and voice."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.12.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+
+  # State management
+  flutter_riverpod: ^2.5.1
+
+  # Navigation
+  go_router: ^14.2.0
+
+  # Backend (Supabase) - data layer
+  supabase_flutter: ^2.5.6
+
+  # i18n
+  intl: any
+
+  # Local storage / preferences
+  shared_preferences: ^2.2.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+  generate: true
+
+  # assets:
+  #   - assets/images/
