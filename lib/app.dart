@@ -5,6 +5,7 @@ import 'core/providers/settings_provider.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'core/widgets/ambient_background.dart';
+import 'features/buddies/buddy_overlay.dart';
 import 'l10n/app_localizations.dart';
 
 class TaskerApp extends ConsumerWidget {
@@ -33,7 +34,7 @@ class TaskerApp extends ConsumerWidget {
         return AmbientBackground(
           style: style,
           brightness: Theme.of(context).brightness,
-          child: child ?? const SizedBox.shrink(),
+          child: BuddyOverlay(child: child ?? const SizedBox.shrink()),
         );
       },
     );

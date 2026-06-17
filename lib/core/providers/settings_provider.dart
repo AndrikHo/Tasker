@@ -12,6 +12,7 @@ final sharedPreferencesProvider = Provider<SharedPreferences>(
 const _kThemeModeKey = 'theme_mode';
 const _kLocaleKey = 'locale';
 const _kStyleKey = 'app_style';
+const _kBuddiesKey = 'buddies_enabled';
 
 /// Theme mode (light / dark / system), persisted.
 class ThemeModeNotifier extends StateNotifier<ThemeMode> {
@@ -86,4 +87,24 @@ class StyleNotifier extends StateNotifier<AppStyle> {
 final styleProvider =
     StateNotifierProvider<StyleNotifier, AppStyle>((ref) {
   return StyleNotifier(ref.watch(sharedPreferencesProvider));
+});
+
+/// Whether the "LIFE FRIENDS" buddies peek in over the app, persisted.
+/// Defaults to on so the feature is discoverable.
+class BuddiesNotifier extends StateNotifier<bool> {
+  BuddiesNotifier(this._prefs) : super(_prefs.getBool(_kBuddiesKey) ?? true);
+
+  final SharedPreferences _prefs;
+
+  Future<void> set(bool enabled) async {
+    state = enabled;
+    await _prefs.setBool(_kBuddiesKey, enabled);
+  }
+
+  Future<void> toggle() => set(!state);
+}
+
+final buddyEnabledProvider =
+    StateNotifierProvider<BuddiesNotifier, bool>((ref) {
+  return BuddiesNotifier(ref.watch(sharedPreferencesProvider));
 });

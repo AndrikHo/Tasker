@@ -41,5 +41,7 @@
   "deleteData": "खाता डेटा हटाएँ",
   "subscription": "सदस्यता",
   "privacyPolicy": "गोपनीयता नीति",
-  "termsOfUse": "उपयोग की शर्तें"
+  "termsOfUse": "उपयोग की शर्तें",
+  "buddies": "बडी",
+  "buddiesHint": "कभी-कभी झांकने वाले मज़ेदार किरदार"
 }

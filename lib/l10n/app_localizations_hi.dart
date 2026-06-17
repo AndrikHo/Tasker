@@ -133,4 +133,10 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get termsOfUse => 'उपयोग की शर्तें';
+
+  @override
+  String get buddies => 'बडी';
+
+  @override
+  String get buddiesHint => 'कभी-कभी झांकने वाले मज़ेदार किरदार';
 }

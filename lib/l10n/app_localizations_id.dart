@@ -133,4 +133,10 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get termsOfUse => 'Ketentuan Penggunaan';
+
+  @override
+  String get buddies => 'Teman Kecil';
+
+  @override
+  String get buddiesHint => 'Karakter jenaka yang sesekali mengintip';
 }

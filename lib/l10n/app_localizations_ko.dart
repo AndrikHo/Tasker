@@ -133,4 +133,10 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get termsOfUse => '이용약관';
+
+  @override
+  String get buddies => '버디';
+
+  @override
+  String get buddiesHint => '가끔 빼꼼 등장하는 깜찍한 캐릭터';
 }

@@ -41,5 +41,7 @@
   "deleteData": "Hapus data akun",
   "subscription": "Langganan",
   "privacyPolicy": "Kebijakan Privasi",
-  "termsOfUse": "Ketentuan Penggunaan"
+  "termsOfUse": "Ketentuan Penggunaan",
+  "buddies": "Teman Kecil",
+  "buddiesHint": "Karakter jenaka yang sesekali mengintip"
 }

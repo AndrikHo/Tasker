@@ -369,6 +369,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Terms of Use'**
   String get termsOfUse;
+
+  /// No description provided for @buddies.
+  ///
+  /// In en, this message translates to:
+  /// **'Buddies'**
+  String get buddies;
+
+  /// No description provided for @buddiesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Playful characters that peek in now and then'**
+  String get buddiesHint;
 }
 
 class _AppLocalizationsDelegate

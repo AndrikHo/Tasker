@@ -41,5 +41,7 @@
   "deleteData": "Eliminar dados da conta",
   "subscription": "Subscrição",
   "privacyPolicy": "Política de Privacidade",
-  "termsOfUse": "Termos de Utilização"
+  "termsOfUse": "Termos de Utilização",
+  "buddies": "Amiguinhos",
+  "buddiesHint": "Personagens que aparecem de vez em quando"
 }

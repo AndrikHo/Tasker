@@ -133,4 +133,10 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get termsOfUse => 'Условия пользования';
+
+  @override
+  String get buddies => 'Дружки';
+
+  @override
+  String get buddiesHint => 'Игривые персонажи, что иногда заглядывают';
 }

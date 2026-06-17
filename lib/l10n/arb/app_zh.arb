@@ -41,5 +41,7 @@
   "deleteData": "删除账户数据",
   "subscription": "订阅",
   "privacyPolicy": "隐私政策",
-  "termsOfUse": "使用条款"
+  "termsOfUse": "使用条款",
+  "buddies": "小伙伴",
+  "buddiesHint": "时不时探头的俏皮角色"
 }

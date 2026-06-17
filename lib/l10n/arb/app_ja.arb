@@ -41,5 +41,7 @@
   "deleteData": "アカウントデータを削除",
   "subscription": "サブスクリプション",
   "privacyPolicy": "プライバシーポリシー",
-  "termsOfUse": "利用規約"
+  "termsOfUse": "利用規約",
+  "buddies": "バディ",
+  "buddiesHint": "ときどき顔を出す愉快なキャラクター"
 }

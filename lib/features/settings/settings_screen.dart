@@ -33,6 +33,7 @@ class SettingsScreen extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
     final themeMode = ref.watch(themeModeProvider);
     final style = ref.watch(styleProvider);
+    final buddies = ref.watch(buddyEnabledProvider);
     final locale = ref.watch(localeProvider);
     final langLabel =
         locale == null ? null : supportedLanguages[locale.languageCode];
@@ -75,6 +76,20 @@ class SettingsScreen extends ConsumerWidget {
                     title: l10n.theme,
                     showChevron: false,
                     trailing: _ThemeSegment(themeMode: themeMode),
+                  ),
+                  _GroupDivider(),
+                  SettingsTile(
+                    icon: Icons.emoji_emotions_outlined,
+                    title: l10n.buddies,
+                    subtitle: l10n.buddiesHint,
+                    showChevron: false,
+                    onTap: () =>
+                        ref.read(buddyEnabledProvider.notifier).toggle(),
+                    trailing: Switch(
+                      value: buddies,
+                      onChanged: (v) =>
+                          ref.read(buddyEnabledProvider.notifier).set(v),
+                    ),
                   ),
                 ],
               ),
@@ -218,17 +233,28 @@ class _StyleGrid extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Row(
+    final styles = AppStyle.values;
+    return Column(
       children: [
-        for (var i = 0; i < AppStyle.values.length; i++) ...[
-          if (i > 0) const SizedBox(width: kBentoGap),
-          Expanded(
-            child: _StyleCard(
-              style: AppStyle.values[i],
-              selected: AppStyle.values[i] == current,
-              onTap: () =>
-                  ref.read(styleProvider.notifier).set(AppStyle.values[i]),
-            ),
+        for (var row = 0; row < styles.length; row += 2) ...[
+          if (row > 0) const SizedBox(height: kBentoGap),
+          Row(
+            children: [
+              for (var col = 0; col < 2; col++) ...[
+                if (col > 0) const SizedBox(width: kBentoGap),
+                Expanded(
+                  child: row + col < styles.length
+                      ? _StyleCard(
+                          style: styles[row + col],
+                          selected: styles[row + col] == current,
+                          onTap: () => ref
+                              .read(styleProvider.notifier)
+                              .set(styles[row + col]),
+                        )
+                      : const SizedBox.shrink(),
+                ),
+              ],
+            ],
           ),
         ],
       ],

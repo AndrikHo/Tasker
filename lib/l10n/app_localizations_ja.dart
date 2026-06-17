@@ -133,4 +133,10 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get termsOfUse => '利用規約';
+
+  @override
+  String get buddies => 'バディ';
+
+  @override
+  String get buddiesHint => 'ときどき顔を出す愉快なキャラクター';
 }

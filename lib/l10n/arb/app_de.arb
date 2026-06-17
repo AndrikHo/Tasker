@@ -41,5 +41,7 @@
   "deleteData": "Kontodaten löschen",
   "subscription": "Abonnement",
   "privacyPolicy": "Datenschutzrichtlinie",
-  "termsOfUse": "Nutzungsbedingungen"
+  "termsOfUse": "Nutzungsbedingungen",
+  "buddies": "Buddies",
+  "buddiesHint": "Verspielte Figuren, die ab und zu auftauchen"
 }

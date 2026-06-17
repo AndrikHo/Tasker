@@ -1,7 +1,9 @@
 {
   "@@locale": "en",
   "appTitle": "Tasker",
-  "@appTitle": { "description": "Application name" },
+  "@appTitle": {
+    "description": "Application name"
+  },
   "greeting": "Hello",
   "navLists": "Lists",
   "navFriends": "Friends",
@@ -42,5 +44,7 @@
   "deleteData": "Delete account data",
   "subscription": "Subscription",
   "privacyPolicy": "Privacy Policy",
-  "termsOfUse": "Terms of Use"
+  "termsOfUse": "Terms of Use",
+  "buddies": "Buddies",
+  "buddiesHint": "Playful characters that peek in now and then"
 }

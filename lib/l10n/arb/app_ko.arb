@@ -41,5 +41,7 @@
   "deleteData": "계정 데이터 삭제",
   "subscription": "구독",
   "privacyPolicy": "개인정보 처리방침",
-  "termsOfUse": "이용약관"
+  "termsOfUse": "이용약관",
+  "buddies": "버디",
+  "buddiesHint": "가끔 빼꼼 등장하는 깜찍한 캐릭터"
 }

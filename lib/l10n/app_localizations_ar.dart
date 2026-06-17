@@ -133,4 +133,10 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get termsOfUse => 'شروط الاستخدام';
+
+  @override
+  String get buddies => 'الرفاق';
+
+  @override
+  String get buddiesHint => 'شخصيات مرحة تطل بين الحين والآخر';
 }

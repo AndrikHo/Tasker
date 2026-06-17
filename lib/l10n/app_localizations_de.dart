@@ -133,4 +133,10 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get termsOfUse => 'Nutzungsbedingungen';
+
+  @override
+  String get buddies => 'Buddies';
+
+  @override
+  String get buddiesHint => 'Verspielte Figuren, die ab und zu auftauchen';
 }

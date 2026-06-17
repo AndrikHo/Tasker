@@ -133,4 +133,10 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get termsOfUse => 'Termos de Utilização';
+
+  @override
+  String get buddies => 'Amiguinhos';
+
+  @override
+  String get buddiesHint => 'Personagens que aparecem de vez em quando';
 }

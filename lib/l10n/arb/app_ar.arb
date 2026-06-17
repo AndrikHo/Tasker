@@ -41,5 +41,7 @@
   "deleteData": "حذف بيانات الحساب",
   "subscription": "الاشتراك",
   "privacyPolicy": "سياسة الخصوصية",
-  "termsOfUse": "شروط الاستخدام"
+  "termsOfUse": "شروط الاستخدام",
+  "buddies": "الرفاق",
+  "buddiesHint": "شخصيات مرحة تطل بين الحين والآخر"
 }

@@ -41,5 +41,7 @@
   "deleteData": "Supprimer les données du compte",
   "subscription": "Abonnement",
   "privacyPolicy": "Politique de confidentialité",
-  "termsOfUse": "Conditions d'utilisation"
+  "termsOfUse": "Conditions d'utilisation",
+  "buddies": "Copains",
+  "buddiesHint": "Des personnages qui pointent le bout du nez"
 }

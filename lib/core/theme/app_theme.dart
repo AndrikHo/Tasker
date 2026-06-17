@@ -124,6 +124,7 @@ class AppTheme {
       AppStyle.playful => GoogleFonts.nunitoTextTheme(base),
       AppStyle.neutral => GoogleFonts.interTextTheme(base),
       AppStyle.glass => GoogleFonts.outfitTextTheme(base),
+      AppStyle.cartoon => GoogleFonts.fredokaTextTheme(base),
     };
     return fonted.copyWith(
       headlineMedium: fonted.headlineMedium?.copyWith(

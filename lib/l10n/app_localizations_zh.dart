@@ -133,4 +133,10 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get termsOfUse => '使用条款';
+
+  @override
+  String get buddies => '小伙伴';
+
+  @override
+  String get buddiesHint => '时不时探头的俏皮角色';
 }
