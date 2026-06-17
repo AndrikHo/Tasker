@@ -1,6 +1,7 @@
 {
   "@@locale": "ar",
   "appTitle": "Tasker",
+  "greeting": "مرحبا",
   "navLists": "القوائم",
   "navFriends": "الأصدقاء",
   "navSettings": "الإعدادات",
@@ -28,6 +29,7 @@
   "themeLight": "فاتح",
   "themeDark": "داكن",
   "themeSystem": "النظام",
+  "style": "النمط",
   "account": "الحساب",
   "profile": "الملف الشخصي",
   "changeAvatar": "تغيير الصورة الرمزية",

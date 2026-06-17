@@ -1,10 +1,16 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/providers/settings_provider.dart';
+import '../../core/theme/app_style.dart';
 import '../../l10n/app_localizations.dart';
+import '../tasks/add_task_sheet.dart';
 
-/// Bottom navigation shell hosting the main tabs.
-class AppShell extends StatelessWidget {
+/// Bottom navigation shell hosting the main tabs with a center add button.
+class AppShell extends ConsumerWidget {
   const AppShell({super.key, required this.navigationShell});
 
   final StatefulNavigationShell navigationShell;
@@ -17,30 +23,203 @@ class AppShell extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
+    final style = ref.watch(styleProvider);
+
     return Scaffold(
+      extendBody: true,
       body: navigationShell,
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: navigationShell.currentIndex,
-        onDestinationSelected: _onTap,
+      floatingActionButton: _GradientFab(
+        style: style,
+        tooltip: l10n.newTask,
+        onPressed: () => showAddTaskSheet(context),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: _GlassNavBar(
+        style: style,
+        currentIndex: navigationShell.currentIndex,
+        onTap: _onTap,
         destinations: [
-          NavigationDestination(
-            icon: const Icon(Icons.checklist_outlined),
-            selectedIcon: const Icon(Icons.checklist),
-            label: l10n.navLists,
+          _NavSpec(Icons.checklist_outlined, Icons.checklist, l10n.navLists),
+          _NavSpec(Icons.people_outline, Icons.people, l10n.navFriends),
+          _NavSpec(Icons.settings_outlined, Icons.settings, l10n.navSettings),
+        ],
+      ),
+    );
+  }
+}
+
+class _NavSpec {
+  const _NavSpec(this.icon, this.selectedIcon, this.label);
+  final IconData icon;
+  final IconData selectedIcon;
+  final String label;
+}
+
+class _GlassNavBar extends StatelessWidget {
+  const _GlassNavBar({
+    required this.style,
+    required this.currentIndex,
+    required this.onTap,
+    required this.destinations,
+  });
+
+  final AppStyle style;
+  final int currentIndex;
+  final ValueChanged<int> onTap;
+  final List<_NavSpec> destinations;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final dark = Theme.of(context).brightness == Brightness.dark;
+    final sigma = style.blurSigma > 0 ? style.blurSigma : 6.0;
+
+    return ClipRect(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: sigma, sigmaY: sigma),
+        child: Container(
+          decoration: BoxDecoration(
+            color: (dark ? scheme.surface : Colors.white)
+                .withValues(alpha: dark ? 0.55 : 0.72),
+            border: Border(
+              top: BorderSide(
+                color: (dark ? Colors.white : scheme.outlineVariant)
+                    .withValues(alpha: 0.08),
+              ),
+            ),
           ),
-          NavigationDestination(
-            icon: const Icon(Icons.people_outline),
-            selectedIcon: const Icon(Icons.people),
-            label: l10n.navFriends,
+          child: SafeArea(
+            top: false,
+            child: SizedBox(
+              height: 64,
+              child: Row(
+                children: [
+                  for (var i = 0; i < destinations.length; i++)
+                    Expanded(
+                      // Leave the center clear for the docked FAB.
+                      child: i == 1
+                          ? _NavItem(
+                              spec: destinations[i],
+                              selected: currentIndex == i,
+                              accent: style.accent,
+                              onTap: () => onTap(i),
+                              padTop: 14,
+                            )
+                          : _NavItem(
+                              spec: destinations[i],
+                              selected: currentIndex == i,
+                              accent: style.accent,
+                              onTap: () => onTap(i),
+                            ),
+                    ),
+                ],
+              ),
+            ),
           ),
-          NavigationDestination(
-            icon: const Icon(Icons.settings_outlined),
-            selectedIcon: const Icon(Icons.settings),
-            label: l10n.navSettings,
+        ),
+      ),
+    );
+  }
+}
+
+class _NavItem extends StatelessWidget {
+  const _NavItem({
+    required this.spec,
+    required this.selected,
+    required this.accent,
+    required this.onTap,
+    this.padTop = 0,
+  });
+
+  final _NavSpec spec;
+  final bool selected;
+  final Color accent;
+  final VoidCallback onTap;
+  final double padTop;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final color = selected ? accent : scheme.onSurfaceVariant;
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Padding(
+        padding: EdgeInsets.only(top: padTop),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 200),
+              child: Icon(
+                selected ? spec.selectedIcon : spec.icon,
+                key: ValueKey(selected),
+                color: color,
+                size: 24,
+              ),
+            ),
+            const SizedBox(height: 3),
+            Text(
+              spec.label,
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: color,
+                    fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                  ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _GradientFab extends StatelessWidget {
+  const _GradientFab({
+    required this.style,
+    required this.onPressed,
+    required this.tooltip,
+  });
+
+  final AppStyle style;
+  final VoidCallback onPressed;
+  final String tooltip;
+
+  @override
+  Widget build(BuildContext context) {
+    final onAccent =
+        style.accent.computeLuminance() > 0.5 ? Colors.black : Colors.white;
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(style.buttonRadius + 4),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [style.accent, style.accent2],
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: style.accent.withValues(alpha: 0.45),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
           ),
         ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onPressed,
+          borderRadius: BorderRadius.circular(style.buttonRadius + 4),
+          child: Tooltip(
+            message: tooltip,
+            child: SizedBox(
+              width: 58,
+              height: 58,
+              child: Icon(Icons.add, color: onAccent, size: 28),
+            ),
+          ),
+        ),
       ),
     );
   }

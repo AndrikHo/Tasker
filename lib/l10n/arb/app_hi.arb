@@ -1,6 +1,7 @@
 {
   "@@locale": "hi",
   "appTitle": "Tasker",
+  "greeting": "नमस्ते",
   "navLists": "सूचियाँ",
   "navFriends": "मित्र",
   "navSettings": "सेटिंग्स",
@@ -28,6 +29,7 @@
   "themeLight": "हल्की",
   "themeDark": "गहरी",
   "themeSystem": "सिस्टम",
+  "style": "शैली",
   "account": "खाता",
   "profile": "प्रोफ़ाइल",
   "changeAvatar": "अवतार बदलें",

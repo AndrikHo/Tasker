@@ -12,6 +12,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get appTitle => 'Tasker';
 
   @override
+  String get greeting => 'こんにちは';
+
+  @override
   String get navLists => 'リスト';
 
   @override
@@ -91,6 +94,9 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get themeSystem => 'システム';
+
+  @override
+  String get style => 'スタイル';
 
   @override
   String get account => 'アカウント';

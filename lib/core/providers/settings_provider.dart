@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../theme/app_style.dart';
+
 /// Provides the SharedPreferences instance. Overridden in main().
 final sharedPreferencesProvider = Provider<SharedPreferences>(
   (ref) => throw UnimplementedError('SharedPreferences not initialized'),
@@ -9,6 +11,7 @@ final sharedPreferencesProvider = Provider<SharedPreferences>(
 
 const _kThemeModeKey = 'theme_mode';
 const _kLocaleKey = 'locale';
+const _kStyleKey = 'app_style';
 
 /// Theme mode (light / dark / system), persisted.
 class ThemeModeNotifier extends StateNotifier<ThemeMode> {
@@ -20,10 +23,12 @@ class ThemeModeNotifier extends StateNotifier<ThemeMode> {
     switch (prefs.getString(_kThemeModeKey)) {
       case 'light':
         return ThemeMode.light;
+      case 'system':
+        return ThemeMode.system;
       case 'dark':
         return ThemeMode.dark;
       default:
-        return ThemeMode.system;
+        return ThemeMode.dark; // dark by default
     }
   }
 
@@ -63,4 +68,22 @@ class LocaleNotifier extends StateNotifier<Locale?> {
 final localeProvider =
     StateNotifierProvider<LocaleNotifier, Locale?>((ref) {
   return LocaleNotifier(ref.watch(sharedPreferencesProvider));
+});
+
+/// Active visual style (playful / neutral / glass), persisted.
+class StyleNotifier extends StateNotifier<AppStyle> {
+  StyleNotifier(this._prefs)
+      : super(AppStyleX.fromId(_prefs.getString(_kStyleKey)));
+
+  final SharedPreferences _prefs;
+
+  Future<void> set(AppStyle style) async {
+    state = style;
+    await _prefs.setString(_kStyleKey, style.id);
+  }
+}
+
+final styleProvider =
+    StateNotifierProvider<StyleNotifier, AppStyle>((ref) {
+  return StyleNotifier(ref.watch(sharedPreferencesProvider));
 });

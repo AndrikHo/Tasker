@@ -1,6 +1,7 @@
 {
   "@@locale": "de",
   "appTitle": "Tasker",
+  "greeting": "Hallo",
   "navLists": "Listen",
   "navFriends": "Freunde",
   "navSettings": "Einstellungen",
@@ -28,6 +29,7 @@
   "themeLight": "Hell",
   "themeDark": "Dunkel",
   "themeSystem": "System",
+  "style": "Stil",
   "account": "Konto",
   "profile": "Profil",
   "changeAvatar": "Avatar ändern",

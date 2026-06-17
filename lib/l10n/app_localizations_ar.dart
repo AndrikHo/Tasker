@@ -12,6 +12,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get appTitle => 'Tasker';
 
   @override
+  String get greeting => 'مرحبا';
+
+  @override
   String get navLists => 'القوائم';
 
   @override
@@ -91,6 +94,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get themeSystem => 'النظام';
+
+  @override
+  String get style => 'النمط';
 
   @override
   String get account => 'الحساب';

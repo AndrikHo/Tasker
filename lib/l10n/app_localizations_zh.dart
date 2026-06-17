@@ -12,6 +12,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get appTitle => 'Tasker';
 
   @override
+  String get greeting => '你好';
+
+  @override
   String get navLists => '列表';
 
   @override
@@ -91,6 +94,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get themeSystem => '跟随系统';
+
+  @override
+  String get style => '样式';
 
   @override
   String get account => '账户';

@@ -124,6 +124,12 @@ abstract class AppLocalizations {
   /// **'Tasker'**
   String get appTitle;
 
+  /// No description provided for @greeting.
+  ///
+  /// In en, this message translates to:
+  /// **'Hello'**
+  String get greeting;
+
   /// No description provided for @navLists.
   ///
   /// In en, this message translates to:
@@ -285,6 +291,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'System'**
   String get themeSystem;
+
+  /// No description provided for @style.
+  ///
+  /// In en, this message translates to:
+  /// **'Style'**
+  String get style;
 
   /// No description provided for @account.
   ///

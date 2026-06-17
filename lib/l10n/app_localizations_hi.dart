@@ -12,6 +12,9 @@ class AppLocalizationsHi extends AppLocalizations {
   String get appTitle => 'Tasker';
 
   @override
+  String get greeting => 'नमस्ते';
+
+  @override
   String get navLists => 'सूचियाँ';
 
   @override
@@ -91,6 +94,9 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get themeSystem => 'सिस्टम';
+
+  @override
+  String get style => 'शैली';
 
   @override
   String get account => 'खाता';

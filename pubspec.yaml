@@ -27,6 +27,9 @@ dependencies:
   # i18n
   intl: any
 
+  # Fonts (per-style typography)
+  google_fonts: ^6.2.1
+
   # Local storage / preferences
   shared_preferences: ^2.2.3
 

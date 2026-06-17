@@ -1,6 +1,7 @@
 {
   "@@locale": "id",
   "appTitle": "Tasker",
+  "greeting": "Halo",
   "navLists": "Daftar",
   "navFriends": "Teman",
   "navSettings": "Pengaturan",
@@ -28,6 +29,7 @@
   "themeLight": "Terang",
   "themeDark": "Gelap",
   "themeSystem": "Sistem",
+  "style": "Gaya",
   "account": "Akun",
   "profile": "Profil",
   "changeAvatar": "Ubah avatar",

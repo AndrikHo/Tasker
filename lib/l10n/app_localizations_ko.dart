@@ -12,6 +12,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get appTitle => 'Tasker';
 
   @override
+  String get greeting => '안녕하세요';
+
+  @override
   String get navLists => '목록';
 
   @override
@@ -91,6 +94,9 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get themeSystem => '시스템';
+
+  @override
+  String get style => '스타일';
 
   @override
   String get account => '계정';

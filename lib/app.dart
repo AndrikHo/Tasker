@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'core/providers/settings_provider.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
+import 'core/widgets/ambient_background.dart';
 import 'l10n/app_localizations.dart';
 
 class TaskerApp extends ConsumerWidget {
@@ -14,17 +15,27 @@ class TaskerApp extends ConsumerWidget {
     final router = ref.watch(routerProvider);
     final themeMode = ref.watch(themeModeProvider);
     final locale = ref.watch(localeProvider);
+    final style = ref.watch(styleProvider);
 
     return MaterialApp.router(
       title: 'Tasker',
       debugShowCheckedModeBanner: false,
       routerConfig: router,
       themeMode: themeMode,
-      theme: AppTheme.light(),
-      darkTheme: AppTheme.dark(),
+      theme: AppTheme.build(style, Brightness.light),
+      darkTheme: AppTheme.build(style, Brightness.dark),
       locale: locale,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
+      builder: (context, child) {
+        // Paint the ambient glow behind every route. Uses the resolved
+        // brightness so it matches light/dark automatically.
+        return AmbientBackground(
+          style: style,
+          brightness: Theme.of(context).brightness,
+          child: child ?? const SizedBox.shrink(),
+        );
+      },
     );
   }
 }

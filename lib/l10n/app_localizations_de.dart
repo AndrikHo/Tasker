@@ -12,6 +12,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get appTitle => 'Tasker';
 
   @override
+  String get greeting => 'Hallo';
+
+  @override
   String get navLists => 'Listen';
 
   @override
@@ -91,6 +94,9 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get themeSystem => 'System';
+
+  @override
+  String get style => 'Stil';
 
   @override
   String get account => 'Konto';

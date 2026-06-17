@@ -1,6 +1,7 @@
 {
   "@@locale": "ja",
   "appTitle": "Tasker",
+  "greeting": "こんにちは",
   "navLists": "リスト",
   "navFriends": "友だち",
   "navSettings": "設定",
@@ -28,6 +29,7 @@
   "themeLight": "ライト",
   "themeDark": "ダーク",
   "themeSystem": "システム",
+  "style": "スタイル",
   "account": "アカウント",
   "profile": "プロフィール",
   "changeAvatar": "アバターを変更",

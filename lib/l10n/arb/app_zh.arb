@@ -1,6 +1,7 @@
 {
   "@@locale": "zh",
   "appTitle": "Tasker",
+  "greeting": "你好",
   "navLists": "列表",
   "navFriends": "好友",
   "navSettings": "设置",
@@ -28,6 +29,7 @@
   "themeLight": "浅色",
   "themeDark": "深色",
   "themeSystem": "跟随系统",
+  "style": "样式",
   "account": "账户",
   "profile": "个人资料",
   "changeAvatar": "更换头像",

@@ -1,6 +1,7 @@
 {
   "@@locale": "ko",
   "appTitle": "Tasker",
+  "greeting": "안녕하세요",
   "navLists": "목록",
   "navFriends": "친구",
   "navSettings": "설정",
@@ -28,6 +29,7 @@
   "themeLight": "라이트",
   "themeDark": "다크",
   "themeSystem": "시스템",
+  "style": "스타일",
   "account": "계정",
   "profile": "프로필",
   "changeAvatar": "아바타 변경",

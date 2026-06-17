@@ -1,6 +1,7 @@
 {
   "@@locale": "ru",
   "appTitle": "Tasker",
+  "greeting": "Привет",
   "navLists": "Списки",
   "navFriends": "Друзья",
   "navSettings": "Настройки",
@@ -28,6 +29,7 @@
   "themeLight": "Светлая",
   "themeDark": "Тёмная",
   "themeSystem": "Системная",
+  "style": "Стиль",
   "account": "Аккаунт",
   "profile": "Профиль",
   "changeAvatar": "Сменить аватар",

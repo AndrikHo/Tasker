@@ -12,6 +12,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get appTitle => 'Tasker';
 
   @override
+  String get greeting => 'Привет';
+
+  @override
   String get navLists => 'Списки';
 
   @override
@@ -91,6 +94,9 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get themeSystem => 'Системная';
+
+  @override
+  String get style => 'Стиль';
 
   @override
   String get account => 'Аккаунт';
