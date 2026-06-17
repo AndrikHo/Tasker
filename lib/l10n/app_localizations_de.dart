@@ -75,6 +75,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get markDone => 'Erledigt';
 
   @override
+  String get active => 'Aktiv';
+
+  @override
   String get edit => 'Bearbeiten';
 
   @override

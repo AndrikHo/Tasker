@@ -75,6 +75,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get markDone => 'Selesai';
 
   @override
+  String get active => 'Aktif';
+
+  @override
   String get edit => 'Edit';
 
   @override

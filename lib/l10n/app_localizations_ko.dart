@@ -75,6 +75,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get markDone => '완료';
 
   @override
+  String get active => '진행 중';
+
+  @override
   String get edit => '편집';
 
   @override

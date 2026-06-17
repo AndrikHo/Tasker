@@ -75,6 +75,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get markDone => 'Concluído';
 
   @override
+  String get active => 'Ativas';
+
+  @override
   String get edit => 'Editar';
 
   @override

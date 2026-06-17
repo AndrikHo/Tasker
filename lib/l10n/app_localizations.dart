@@ -250,6 +250,12 @@ abstract class AppLocalizations {
   /// **'Done'**
   String get markDone;
 
+  /// No description provided for @active.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get active;
+
   /// No description provided for @edit.
   ///
   /// In en, this message translates to:

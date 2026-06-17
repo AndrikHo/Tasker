@@ -75,6 +75,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get markDone => '完了';
 
   @override
+  String get active => '進行中';
+
+  @override
   String get edit => '編集';
 
   @override

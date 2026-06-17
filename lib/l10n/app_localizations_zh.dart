@@ -75,6 +75,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get markDone => '完成';
 
   @override
+  String get active => '进行中';
+
+  @override
   String get edit => '编辑';
 
   @override

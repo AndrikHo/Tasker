@@ -20,6 +20,8 @@ class SurfaceCard extends ConsumerStatefulWidget {
     this.alt = false,
     this.elevated = true,
     this.border = true,
+    this.gradient,
+    this.fillOverride,
   });
 
   final Widget child;
@@ -36,6 +38,13 @@ class SurfaceCard extends ConsumerStatefulWidget {
   /// Whether to draw the hairline edge.
   final bool border;
 
+  /// Paints this gradient as the surface fill instead of the themed color.
+  /// Disables the glass blur for this tile so the gradient stays crisp.
+  final Gradient? gradient;
+
+  /// Solid fill that overrides the themed surface color (and the blur).
+  final Color? fillOverride;
+
   @override
   ConsumerState<SurfaceCard> createState() => _SurfaceCardState();
 }
@@ -49,14 +58,19 @@ class _SurfaceCardState extends ConsumerState<SurfaceCard> {
     final dark = Theme.of(context).brightness == Brightness.dark;
     final br = BorderRadius.circular(widget.radius ?? style.cardRadius);
 
-    final useBlur = style.glassy && style.blurSigma > 0;
-    final fill = useBlur
-        ? style.glassFill(dark)
-        : (widget.alt ? style.cardColorAlt(dark) : style.cardColor(dark));
+    final hasPaint = widget.gradient != null || widget.fillOverride != null;
+    final useBlur = style.glassy && style.blurSigma > 0 && !hasPaint;
+    final fill = widget.fillOverride ??
+        (useBlur
+            ? style.glassFill(dark)
+            : (widget.alt
+                ? style.cardColorAlt(dark)
+                : style.cardColor(dark)));
 
     Widget content = DecoratedBox(
       decoration: BoxDecoration(
-        color: fill,
+        color: widget.gradient == null ? fill : null,
+        gradient: widget.gradient,
         borderRadius: br,
         border: widget.border
             ? Border.all(color: style.hairline(dark), width: 1)

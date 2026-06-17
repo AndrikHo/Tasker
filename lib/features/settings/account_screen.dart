@@ -3,11 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/providers/settings_provider.dart';
 import '../../core/theme/app_style.dart';
+import '../../core/widgets/bento.dart';
 import '../../core/widgets/settings_tile.dart';
 import '../../core/widgets/surface_card.dart';
 import '../../l10n/app_localizations.dart';
 
-/// Account functions screen. Skeleton: actions are placeholders.
+/// Account functions screen, bento-style: a profile hero tile followed by
+/// grouped action tiles. Actions are placeholders until auth lands.
 class AccountScreen extends ConsumerWidget {
   const AccountScreen({super.key});
 
@@ -20,33 +22,56 @@ class AccountScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: Text(l10n.account)),
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 0, 16, 40),
+        padding: const EdgeInsets.fromLTRB(kBentoPad, 8, kBentoPad, 40),
         children: [
-          const SizedBox(height: 12),
-          Center(
-            child: Column(
+          // Profile hero.
+          BentoTile(
+            padding: const EdgeInsets.all(20),
+            child: Row(
               children: [
-                _AvatarRing(style: style),
-                const SizedBox(height: 14),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
-                  decoration: BoxDecoration(
-                    color: style.accent.withValues(alpha: 0.14),
-                    borderRadius: BorderRadius.circular(40),
-                  ),
-                  child: Text(
-                    '#0',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          color: style.accent,
-                          fontWeight: FontWeight.w800,
+                _AvatarRing(style: style, size: 76),
+                const SizedBox(width: 18),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        l10n.profile,
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineSmall
+                            ?.copyWith(
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: -0.6,
+                            ),
+                      ),
+                      const SizedBox(height: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: style.accent.withValues(alpha: 0.14),
+                          borderRadius: BorderRadius.circular(40),
                         ),
+                        child: Text(
+                          '#0',
+                          style: Theme.of(context)
+                              .textTheme
+                              .labelLarge
+                              ?.copyWith(
+                                color: style.accent,
+                                fontWeight: FontWeight.w800,
+                              ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 28),
+          const SizedBox(height: kBentoGap),
           _Group(
             children: [
               SettingsTile(
@@ -62,7 +87,7 @@ class AccountScreen extends ConsumerWidget {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: kBentoGap),
           _Group(
             children: [
               SettingsTile(
@@ -85,7 +110,7 @@ class AccountScreen extends ConsumerWidget {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: kBentoGap),
           _Group(
             children: [
               SettingsTile(
@@ -126,7 +151,7 @@ class _Group extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SurfaceCard(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: const EdgeInsets.symmetric(vertical: 6),
       child: Column(children: children),
     );
   }
@@ -148,20 +173,21 @@ class _GroupDivider extends StatelessWidget {
 }
 
 class _AvatarRing extends StatelessWidget {
-  const _AvatarRing({required this.style});
+  const _AvatarRing({required this.style, this.size = 104});
   final AppStyle style;
+  final double size;
 
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     return SizedBox(
-      width: 104,
-      height: 104,
+      width: size,
+      height: size,
       child: Stack(
         children: [
           Container(
-            width: 104,
-            height: 104,
+            width: size,
+            height: size,
             padding: const EdgeInsets.all(3),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
@@ -173,22 +199,22 @@ class _AvatarRing extends StatelessWidget {
               boxShadow: [
                 BoxShadow(
                   color: style.accent.withValues(alpha: 0.30),
-                  blurRadius: 22,
-                  offset: const Offset(0, 8),
+                  blurRadius: 18,
+                  offset: const Offset(0, 6),
                 ),
               ],
             ),
             child: CircleAvatar(
               backgroundColor: scheme.surfaceContainerHigh,
-              child:
-                  Icon(Icons.person, size: 46, color: scheme.onSurfaceVariant),
+              child: Icon(Icons.person,
+                  size: size * 0.42, color: scheme.onSurfaceVariant),
             ),
           ),
           Positioned(
             right: 0,
             bottom: 0,
             child: Container(
-              padding: const EdgeInsets.all(7),
+              padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
                 color: style.accent,
                 shape: BoxShape.circle,
@@ -196,7 +222,7 @@ class _AvatarRing extends StatelessWidget {
               ),
               child: Icon(
                 Icons.photo_camera,
-                size: 15,
+                size: 13,
                 color: style.onAccent,
               ),
             ),

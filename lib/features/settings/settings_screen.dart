@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/providers/settings_provider.dart';
 import '../../core/theme/app_style.dart';
+import '../../core/widgets/bento.dart';
 import '../../core/widgets/settings_tile.dart';
 import '../../core/widgets/surface_card.dart';
 import '../../l10n/app_localizations.dart';
@@ -42,9 +43,10 @@ class SettingsScreen extends ConsumerWidget {
         child: ListView(
           padding: const EdgeInsets.only(bottom: 120),
           children: [
-            _Header(title: l10n.settingsTitle),
+            BentoHeader(title: l10n.settingsTitle),
+            const SizedBox(height: 6),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: kBentoPad),
               child: _Group(
                 children: [
                   SettingsTile(
@@ -56,9 +58,9 @@ class SettingsScreen extends ConsumerWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: kBentoGap),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: kBentoPad),
               child: _Group(
                 children: [
                   SettingsTile(
@@ -79,17 +81,20 @@ class SettingsScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 24),
             Padding(
-              padding: const EdgeInsets.fromLTRB(22, 0, 22, 10),
+              padding: const EdgeInsets.fromLTRB(kBentoPad + 6, 0, kBentoPad, 12),
               child: Text(
                 l10n.style.toUpperCase(),
                 style: Theme.of(context).textTheme.labelMedium?.copyWith(
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                       fontWeight: FontWeight.w800,
-                      letterSpacing: 1.0,
+                      letterSpacing: 1.2,
                     ),
               ),
             ),
-            _StylePicker(current: style),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: kBentoPad),
+              child: _StyleGrid(current: style),
+            ),
           ],
         ),
       ),
@@ -124,26 +129,6 @@ class SettingsScreen extends ConsumerWidget {
   }
 }
 
-class _Header extends StatelessWidget {
-  const _Header({required this.title});
-
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 18, 20, 10),
-      child: Text(
-        title,
-        style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-              fontWeight: FontWeight.w800,
-              letterSpacing: -0.5,
-            ),
-      ),
-    );
-  }
-}
-
 /// A grouped settings card: tiles laid out in a single elevated surface.
 class _Group extends StatelessWidget {
   const _Group({required this.children});
@@ -153,7 +138,7 @@ class _Group extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SurfaceCard(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: const EdgeInsets.symmetric(vertical: 6),
       child: Column(children: children),
     );
   }
@@ -226,65 +211,95 @@ class _LanguageRow extends ConsumerWidget {
   }
 }
 
-class _StylePicker extends ConsumerWidget {
-  const _StylePicker({required this.current});
+/// The visual-style picker as a 3-up bento grid of gradient-swatch tiles.
+class _StyleGrid extends ConsumerWidget {
+  const _StyleGrid({required this.current});
   final AppStyle current;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return SizedBox(
-      height: 100,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        itemCount: AppStyle.values.length,
-        separatorBuilder: (_, _) => const SizedBox(width: 12),
-        itemBuilder: (context, i) {
-          final s = AppStyle.values[i];
-          final selected = s == current;
-          return GestureDetector(
-            onTap: () => ref.read(styleProvider.notifier).set(s),
-            child: AnimatedContainer(
-              duration: s.motion,
-              curve: s.curve,
-              width: 104,
-              padding: const EdgeInsets.all(14),
+    return Row(
+      children: [
+        for (var i = 0; i < AppStyle.values.length; i++) ...[
+          if (i > 0) const SizedBox(width: kBentoGap),
+          Expanded(
+            child: _StyleCard(
+              style: AppStyle.values[i],
+              selected: AppStyle.values[i] == current,
+              onTap: () =>
+                  ref.read(styleProvider.notifier).set(AppStyle.values[i]),
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+}
+
+class _StyleCard extends StatelessWidget {
+  const _StyleCard({
+    required this.style,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final AppStyle style;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final dark = theme.brightness == Brightness.dark;
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: style.motion,
+        curve: style.curve,
+        height: 132,
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: selected
+              ? style.accent.withValues(alpha: dark ? 0.18 : 0.14)
+              : style.cardColor(dark),
+          borderRadius: BorderRadius.circular(style.cardRadius),
+          border: Border.all(
+            color: selected ? style.accent : style.hairline(dark),
+            width: selected ? 2 : 1,
+          ),
+          boxShadow: selected ? null : style.cardShadow(dark),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              height: 46,
               decoration: BoxDecoration(
-                color: s.accent.withValues(alpha: selected ? 0.20 : 0.10),
-                borderRadius: BorderRadius.circular(s.cardRadius),
-                border: Border.all(
-                  color: selected ? s.accent : Colors.transparent,
-                  width: 2,
+                borderRadius: BorderRadius.circular(style.chipRadius),
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [style.accent, style.accent2],
                 ),
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    width: 26,
-                    height: 26,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [s.accent, s.accent2],
-                      ),
+            ),
+            const Spacer(),
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    style.label,
+                    style: theme.textTheme.labelLarge?.copyWith(
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
-                  const Spacer(),
-                  Text(
-                    s.label,
-                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                          fontWeight: FontWeight.w700,
-                        ),
-                  ),
-                ],
-              ),
+                ),
+                if (selected)
+                  Icon(Icons.check_circle, size: 16, color: style.accent),
+              ],
             ),
-          );
-        },
+          ],
+        ),
       ),
     );
   }

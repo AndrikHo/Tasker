@@ -4,14 +4,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/providers/settings_provider.dart';
 import '../../core/theme/app_style.dart';
 import '../../core/widgets/account_avatar.dart';
+import '../../core/widgets/bento.dart';
 import '../../core/widgets/surface_card.dart';
 import '../../l10n/app_localizations.dart';
 import '../tasks/task_model.dart';
 import '../tasks/task_providers.dart';
 import 'add_friend_sheet.dart';
 
-/// Friends and groups: a header, a list of friends, and the shared groups
-/// with their member avatars. Demo data previews the collaboration model.
+/// Friends and groups, bento-style: an editorial header, a Friends-count /
+/// Add-friend stat row, the friends as clean rows, and the shared groups as
+/// gradient-iconed bento tiles with overlapping member avatars.
 class FriendsScreen extends ConsumerWidget {
   const FriendsScreen({super.key});
 
@@ -39,26 +41,54 @@ class FriendsScreen extends ConsumerWidget {
         child: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(
-              child: _Header(
+              child: BentoHeader(
                 title: l10n.friendsTitle,
-                onAdd: () => showAddFriendSheet(context),
+                trailing: const AccountAvatar(radius: 22),
               ),
             ),
+
+            // Stat row: friends count + add-friend tile.
             SliverPadding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-              sliver: SliverList.separated(
-                itemCount: friends.length,
-                separatorBuilder: (_, _) => const SizedBox(height: 12),
-                itemBuilder: (context, i) => _FriendRow(member: friends[i]),
+              padding: const EdgeInsets.fromLTRB(kBentoPad, 10, kBentoPad, 0),
+              sliver: SliverToBoxAdapter(
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: BentoStat(
+                        value: '${friends.length}',
+                        label: l10n.friendsTitle,
+                        icon: Icons.people_outline,
+                      ),
+                    ),
+                    const SizedBox(width: kBentoGap),
+                    Expanded(
+                      child: BentoAddTile(
+                        label: l10n.addFriend,
+                        icon: Icons.person_add_alt_1_rounded,
+                        onTap: () => showAddFriendSheet(context),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-            _SectionHeader(label: l10n.groups),
+
+            // Friends as clean rows in one surface.
             SliverPadding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 120),
+              padding: const EdgeInsets.fromLTRB(kBentoPad, 18, kBentoPad, 0),
+              sliver: SliverToBoxAdapter(
+                child: _FriendGroup(members: friends),
+              ),
+            ),
+
+            _SectionLabel(label: l10n.groups),
+
+            SliverPadding(
+              padding: const EdgeInsets.fromLTRB(kBentoPad, 0, kBentoPad, 120),
               sliver: SliverList.separated(
                 itemCount: groups.length,
-                separatorBuilder: (_, _) => const SizedBox(height: 12),
-                itemBuilder: (context, i) => _GroupCard(group: groups[i]),
+                separatorBuilder: (_, _) => const SizedBox(height: kBentoGap),
+                itemBuilder: (context, i) => _GroupTile(group: groups[i]),
               ),
             ),
           ],
@@ -74,61 +104,53 @@ class _Group {
   final List<Member> members;
 }
 
-class _Header extends StatelessWidget {
-  const _Header({required this.title, required this.onAdd});
-
-  final String title;
-  final VoidCallback onAdd;
+class _SectionLabel extends StatelessWidget {
+  const _SectionLabel({required this.label});
+  final String label;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 18, 16, 4),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(
-              title,
-              style: theme.textTheme.headlineMedium?.copyWith(
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(kBentoPad + 6, 24, kBentoPad, 10),
+        child: Text(
+          label.toUpperCase(),
+          style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
                 fontWeight: FontWeight.w800,
-                letterSpacing: -0.5,
+                letterSpacing: 1.2,
               ),
-            ),
-          ),
-          _RoundIconButton(icon: Icons.person_add_alt_1_rounded, onTap: onAdd),
-          const SizedBox(width: 12),
-          const AccountAvatar(radius: 21),
-        ],
+        ),
       ),
     );
   }
 }
 
-class _RoundIconButton extends StatelessWidget {
-  const _RoundIconButton({required this.icon, required this.onTap});
-
-  final IconData icon;
-  final VoidCallback onTap;
+class _FriendGroup extends StatelessWidget {
+  const _FriendGroup({required this.members});
+  final List<Member> members;
 
   @override
   Widget build(BuildContext context) {
     final dark = Theme.of(context).brightness == Brightness.dark;
-    final scheme = Theme.of(context).colorScheme;
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 44,
-        height: 44,
-        decoration: BoxDecoration(
-          color: (dark ? Colors.white : Colors.black)
-              .withValues(alpha: dark ? 0.06 : 0.04),
-          shape: BoxShape.circle,
-          border: Border.all(
-            color: (dark ? Colors.white : Colors.black).withValues(alpha: 0.08),
-          ),
-        ),
-        child: Icon(icon, size: 23, color: scheme.onSurface),
+    return SurfaceCard(
+      padding: EdgeInsets.zero,
+      child: Column(
+        children: [
+          for (var i = 0; i < members.length; i++) ...[
+            if (i > 0)
+              Padding(
+                padding: const EdgeInsets.only(left: 74, right: 16),
+                child: Divider(
+                  height: 1,
+                  thickness: 1,
+                  color: (dark ? Colors.white : Colors.black)
+                      .withValues(alpha: 0.06),
+                ),
+              ),
+            _FriendRow(member: members[i]),
+          ],
+        ],
       ),
     );
   }
@@ -142,33 +164,35 @@ class _FriendRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return SurfaceCard(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+    return InkWell(
       onTap: () {},
-      child: Row(
-        children: [
-          _MemberAvatar(member: member, radius: 24),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Text(
-              member.name,
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w700,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Row(
+          children: [
+            _MemberAvatar(member: member, radius: 22),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Text(
+                member.name,
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
-          ),
-          Icon(
-            Icons.chevron_right_rounded,
-            color: theme.colorScheme.onSurfaceVariant,
-          ),
-        ],
+            Icon(
+              Icons.chevron_right_rounded,
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
-class _GroupCard extends ConsumerWidget {
-  const _GroupCard({required this.group});
+class _GroupTile extends ConsumerWidget {
+  const _GroupTile({required this.group});
 
   final _Group group;
 
@@ -176,38 +200,36 @@ class _GroupCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final style = ref.watch(styleProvider);
-    return SurfaceCard(
+    return BentoTile(
       onTap: () {},
       child: Row(
         children: [
           Container(
-            width: 48,
-            height: 48,
+            width: 52,
+            height: 52,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(style.chipRadius),
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [
-                  style.accent.withValues(alpha: 0.9),
-                  style.accent2.withValues(alpha: 0.9),
-                ],
+                colors: [style.accent, style.accent2],
               ),
             ),
-            child: Icon(Icons.groups_rounded, color: style.onAccent, size: 26),
+            child: Icon(Icons.groups_rounded, color: style.onAccent, size: 28),
           ),
-          const SizedBox(width: 14),
+          const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   group.name,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: -0.3,
                   ),
                 ),
-                const SizedBox(height: 6),
+                const SizedBox(height: 8),
                 _MemberStack(members: group.members),
               ],
             ),
@@ -254,8 +276,8 @@ class _MemberStack extends ConsumerWidget {
     final style = ref.watch(styleProvider);
     final dark = Theme.of(context).brightness == Brightness.dark;
     final ring = style.cardColor(dark);
-    const r = 13.0;
-    const overlap = 16.0;
+    const r = 14.0;
+    const overlap = 17.0;
 
     return SizedBox(
       height: r * 2,
@@ -272,29 +294,6 @@ class _MemberStack extends ConsumerWidget {
               ),
             ),
         ],
-      ),
-    );
-  }
-}
-
-class _SectionHeader extends StatelessWidget {
-  const _SectionHeader({required this.label});
-
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return SliverToBoxAdapter(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(22, 22, 22, 10),
-        child: Text(
-          label.toUpperCase(),
-          style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-                fontWeight: FontWeight.w800,
-                letterSpacing: 1.0,
-              ),
-        ),
       ),
     );
   }

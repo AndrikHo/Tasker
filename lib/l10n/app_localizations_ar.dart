@@ -75,6 +75,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get markDone => 'تم';
 
   @override
+  String get active => 'نشطة';
+
+  @override
   String get edit => 'تعديل';
 
   @override

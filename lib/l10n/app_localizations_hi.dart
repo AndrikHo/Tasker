@@ -75,6 +75,9 @@ class AppLocalizationsHi extends AppLocalizations {
   String get markDone => 'पूर्ण';
 
   @override
+  String get active => 'सक्रिय';
+
+  @override
   String get edit => 'संपादित करें';
 
   @override

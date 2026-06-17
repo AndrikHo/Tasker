@@ -5,18 +5,16 @@ import 'package:intl/intl.dart';
 import '../../core/providers/settings_provider.dart';
 import '../../core/theme/app_style.dart';
 import '../../core/widgets/account_avatar.dart';
-import '../../core/widgets/app_empty_state.dart';
-import '../../core/widgets/progress_ring.dart';
+import '../../core/widgets/bento.dart';
 import '../../core/widgets/surface_card.dart';
 import '../../l10n/app_localizations.dart';
 import '../tasks/add_task_sheet.dart';
-import '../tasks/task_card.dart';
 import '../tasks/task_model.dart';
 import '../tasks/task_providers.dart';
-import 'new_list_sheet.dart';
 
-/// Lists home: a warm greeting header, a progress-ring hero for the active
-/// list, pill tabs for each list, and the tasks split into active / done.
+/// Lists home, bento-style: an editorial greeting header, a list switcher
+/// strip, a big-number hero (percent + progress), an Active / New-task stat
+/// row, and the tasks grouped into clean rows inside elevated surfaces.
 class ListsScreen extends ConsumerStatefulWidget {
   const ListsScreen({super.key});
 
@@ -29,7 +27,6 @@ class _ListsScreenState extends ConsumerState<ListsScreen> {
 
   static const _kinds = ListKind.values;
 
-  // Per-list identity colors used for the pill dots.
   static const _dotColors = <Color>[
     Color(0xFF22D3EE),
     Color(0xFF818CF8),
@@ -40,8 +37,11 @@ class _ListsScreenState extends ConsumerState<ListsScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final style = ref.watch(styleProvider);
     final tasksByList = ref.watch(tasksProvider);
     final kind = _kinds[_selected];
+    final locale = Localizations.localeOf(context).toString();
+    final date = DateFormat.MMMMEEEEd(locale).format(DateTime.now());
     final names = [
       l10n.personalList,
       l10n.sharedList,
@@ -52,10 +52,10 @@ class _ListsScreenState extends ConsumerState<ListsScreen> {
     final tasks = tasksByList[kind] ?? const <TaskItem>[];
     final active = tasks.where((t) => !t.done).toList();
     final done = tasks.where((t) => t.done).toList();
+    final pct = tasks.isEmpty ? 0 : (done.length / tasks.length * 100).round();
 
-    void toggle(TaskItem t) => ref
-        .read(tasksProvider.notifier)
-        .toggle(kind, t.id, DemoMembers.me);
+    void toggle(TaskItem t) =>
+        ref.read(tasksProvider.notifier).toggle(kind, t.id, DemoMembers.me);
 
     return Scaffold(
       body: SafeArea(
@@ -63,34 +63,27 @@ class _ListsScreenState extends ConsumerState<ListsScreen> {
         child: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(
-              child: _Header(greeting: l10n.greeting, onNewList: () => showNewListSheet(context)),
-            ),
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 6, 16, 0),
-                child: _HeroProgress(
-                  listName: names[_selected],
-                  total: tasks.length,
-                  done: done.length,
-                  doneLabel: l10n.markDone,
-                  emptyLabel: l10n.emptyTasks,
-                ),
+              child: BentoHeader(
+                eyebrow: date,
+                title: l10n.greeting,
+                trailing: const AccountAvatar(radius: 22),
               ),
             ),
+
+            // List switcher strip.
             SliverToBoxAdapter(
               child: SizedBox(
-                height: 56,
+                height: 48,
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.fromLTRB(16, 14, 16, 4),
+                  padding: const EdgeInsets.fromLTRB(kBentoPad, 8, kBentoPad, 0),
                   itemCount: names.length,
                   separatorBuilder: (_, _) => const SizedBox(width: 10),
                   itemBuilder: (context, i) {
-                    final count =
-                        (tasksByList[_kinds[i]] ?? const <TaskItem>[])
-                            .where((t) => !t.done)
-                            .length;
-                    return _ListPill(
+                    final count = (tasksByList[_kinds[i]] ?? const <TaskItem>[])
+                        .where((t) => !t.done)
+                        .length;
+                    return _ListChip(
                       label: names[i],
                       count: count,
                       dot: _dotColors[i],
@@ -101,218 +94,202 @@ class _ListsScreenState extends ConsumerState<ListsScreen> {
                 ),
               ),
             ),
+
+            // Bento: hero + stats.
+            SliverPadding(
+              padding: const EdgeInsets.fromLTRB(kBentoPad, 14, kBentoPad, 0),
+              sliver: SliverToBoxAdapter(
+                child: Column(
+                  children: [
+                    _HeroTile(
+                      listName: names[_selected],
+                      pct: pct,
+                      done: done.length,
+                      total: tasks.length,
+                      doneLabel: l10n.markDone,
+                      accent: style.accent,
+                    ),
+                    const SizedBox(height: kBentoGap),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: BentoStat(
+                            value: '${active.length}',
+                            label: l10n.active,
+                            icon: Icons.bolt_rounded,
+                          ),
+                        ),
+                        const SizedBox(width: kBentoGap),
+                        Expanded(
+                          child: BentoAddTile(
+                            label: l10n.newTask,
+                            onTap: () => showAddTaskSheet(context),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
             if (tasks.isEmpty)
-              SliverFillRemaining(
-                hasScrollBody: false,
-                child: AppEmptyState(
-                  icon: Icons.task_alt,
-                  title: l10n.emptyTasks,
-                  actionLabel: l10n.newTask,
-                  onAction: () => showAddTaskSheet(context),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(kBentoPad, 28, kBentoPad, 0),
+                  child: Text(
+                    l10n.emptyTasks,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          fontWeight: FontWeight.w600,
+                        ),
+                  ),
                 ),
               )
             else ...[
-              const SliverToBoxAdapter(child: SizedBox(height: 8)),
-              ..._taskSlivers(active, toggle),
-              if (done.isNotEmpty) _SectionHeader(label: l10n.markDone),
-              ..._taskSlivers(done, toggle),
-              const SliverToBoxAdapter(child: SizedBox(height: 120)),
+              if (active.isNotEmpty)
+                SliverPadding(
+                  padding:
+                      const EdgeInsets.fromLTRB(kBentoPad, 18, kBentoPad, 0),
+                  sliver: SliverToBoxAdapter(
+                    child: _TaskGroup(items: active, toggle: toggle),
+                  ),
+                ),
+              if (done.isNotEmpty) ...[
+                _SectionLabel(label: l10n.markDone),
+                SliverPadding(
+                  padding: const EdgeInsets.fromLTRB(kBentoPad, 0, kBentoPad, 0),
+                  sliver: SliverToBoxAdapter(
+                    child: _TaskGroup(items: done, toggle: toggle),
+                  ),
+                ),
+              ],
             ],
+            const SliverToBoxAdapter(child: SizedBox(height: 120)),
           ],
         ),
       ),
     );
   }
-
-  List<Widget> _taskSlivers(List<TaskItem> items, void Function(TaskItem) toggle) {
-    return [
-      SliverPadding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        sliver: SliverList.separated(
-          itemCount: items.length,
-          separatorBuilder: (_, _) => const SizedBox(height: 12),
-          itemBuilder: (context, i) {
-            final t = items[i];
-            return TaskCard(task: t, onToggle: () => toggle(t));
-          },
-        ),
-      ),
-    ];
-  }
 }
 
-class _Header extends StatelessWidget {
-  const _Header({required this.greeting, required this.onNewList});
+/// Full-width hero tile: list name, an oversized completion percentage, the
+/// done/total count and a slim progress bar.
+class _HeroTile extends StatelessWidget {
+  const _HeroTile({
+    required this.listName,
+    required this.pct,
+    required this.done,
+    required this.total,
+    required this.doneLabel,
+    required this.accent,
+  });
 
-  final String greeting;
-  final VoidCallback onNewList;
+  final String listName;
+  final int pct;
+  final int done;
+  final int total;
+  final String doneLabel;
+  final Color accent;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final locale = Localizations.localeOf(context).toString();
-    final date = DateFormat.MMMMEEEEd(locale).format(DateTime.now());
-
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 12, 16, 2),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
+    return BentoTile(
+      padding: const EdgeInsets.all(22),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  date,
-                  style: theme.textTheme.labelMedium?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 0.2,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  greeting,
-                  style: theme.textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: -0.5,
-                  ),
-                ),
-              ],
+          Text(
+            listName.toUpperCase(),
+            style: theme.textTheme.labelMedium?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 1.4,
             ),
           ),
-          _RoundIconButton(icon: Icons.add_rounded, onTap: onNewList),
-          const SizedBox(width: 12),
-          const AccountAvatar(radius: 21),
+          const SizedBox(height: 10),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                '$pct',
+                style: const TextStyle(
+                  fontSize: 64,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: -3,
+                  height: 0.9,
+                ).copyWith(color: theme.colorScheme.onSurface),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8, left: 2),
+                child: Text(
+                  '%',
+                  style: theme.textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.w800,
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ),
+              const Spacer(),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      '$done / $total',
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.w800,
+                        color: accent,
+                      ),
+                    ),
+                    Text(
+                      doneLabel.toLowerCase(),
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 18),
+          _ProgressBar(value: total == 0 ? 0 : done / total),
         ],
       ),
     );
   }
 }
 
-class _RoundIconButton extends ConsumerWidget {
-  const _RoundIconButton({required this.icon, required this.onTap});
-
-  final IconData icon;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final dark = Theme.of(context).brightness == Brightness.dark;
-    final scheme = Theme.of(context).colorScheme;
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 44,
-        height: 44,
-        decoration: BoxDecoration(
-          color: (dark ? Colors.white : Colors.black).withValues(alpha: dark ? 0.06 : 0.04),
-          shape: BoxShape.circle,
-          border: Border.all(
-            color: (dark ? Colors.white : Colors.black).withValues(alpha: 0.08),
-          ),
-        ),
-        child: Icon(icon, size: 24, color: scheme.onSurface),
-      ),
-    );
-  }
-}
-
-class _HeroProgress extends ConsumerWidget {
-  const _HeroProgress({
-    required this.listName,
-    required this.total,
-    required this.done,
-    required this.doneLabel,
-    required this.emptyLabel,
-  });
-
-  final String listName;
-  final int total;
-  final int done;
-  final String doneLabel;
-  final String emptyLabel;
+class _ProgressBar extends ConsumerWidget {
+  const _ProgressBar({required this.value});
+  final double value;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final style = ref.watch(styleProvider);
-    final theme = Theme.of(context);
-    final value = total == 0 ? 0.0 : done / total;
-    final pct = (value * 100).round();
-
-    return SurfaceCard(
-      padding: const EdgeInsets.all(20),
-      child: Row(
+    final dark = Theme.of(context).brightness == Brightness.dark;
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: Stack(
         children: [
-          ProgressRing(
-            value: value,
-            color: style.accent,
-            color2: style.accent2,
-            size: 84,
-            stroke: 9,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  '$pct%',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: -0.5,
-                  ),
-                ),
-              ],
-            ),
+          Container(
+            height: 12,
+            color: (dark ? Colors.white : Colors.black).withValues(alpha: 0.07),
           ),
-          const SizedBox(width: 20),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  listName,
-                  style: theme.textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: -0.4,
-                  ),
+          FractionallySizedBox(
+            widthFactor: value.clamp(0.0, 1.0),
+            child: Container(
+              height: 12,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [style.accent, style.accent2],
                 ),
-                const SizedBox(height: 8),
-                if (total == 0)
-                  Text(
-                    emptyLabel,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                  )
-                else
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.baseline,
-                    textBaseline: TextBaseline.alphabetic,
-                    children: [
-                      Text(
-                        '$done',
-                        style: theme.textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.w800,
-                          color: style.accent,
-                        ),
-                      ),
-                      Text(
-                        ' / $total',
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w700,
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        doneLabel.toLowerCase(),
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
-                  ),
-              ],
+              ),
             ),
           ),
         ],
@@ -321,31 +298,9 @@ class _HeroProgress extends ConsumerWidget {
   }
 }
 
-class _SectionHeader extends StatelessWidget {
-  const _SectionHeader({required this.label});
-
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return SliverToBoxAdapter(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(22, 14, 22, 10),
-        child: Text(
-          label.toUpperCase(),
-          style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-                fontWeight: FontWeight.w800,
-                letterSpacing: 1.0,
-              ),
-        ),
-      ),
-    );
-  }
-}
-
-class _ListPill extends ConsumerWidget {
-  const _ListPill({
+/// A list switcher chip: a colored dot, label and active count badge.
+class _ListChip extends ConsumerWidget {
+  const _ListChip({
     required this.label,
     required this.count,
     required this.dot,
@@ -376,7 +331,7 @@ class _ListPill extends ConsumerWidget {
           color: selected
               ? style.accent.withValues(alpha: dark ? 0.18 : 0.14)
               : (dark ? Colors.white : Colors.black).withValues(alpha: 0.04),
-          borderRadius: BorderRadius.circular(40),
+          borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: selected
                 ? style.accent
@@ -421,6 +376,264 @@ class _ListPill extends ConsumerWidget {
             ],
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _SectionLabel extends StatelessWidget {
+  const _SectionLabel({required this.label});
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(kBentoPad + 6, 22, kBentoPad, 10),
+        child: Text(
+          label.toUpperCase(),
+          style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                fontWeight: FontWeight.w800,
+                letterSpacing: 1.2,
+              ),
+        ),
+      ),
+    );
+  }
+}
+
+/// A group of task rows inside a single elevated surface, divided by hairlines.
+class _TaskGroup extends ConsumerWidget {
+  const _TaskGroup({required this.items, required this.toggle});
+
+  final List<TaskItem> items;
+  final void Function(TaskItem) toggle;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final dark = Theme.of(context).brightness == Brightness.dark;
+    return SurfaceCard(
+      padding: EdgeInsets.zero,
+      child: Column(
+        children: [
+          for (var i = 0; i < items.length; i++) ...[
+            if (i > 0)
+              Padding(
+                padding: const EdgeInsets.only(left: 58, right: 16),
+                child: Divider(
+                  height: 1,
+                  thickness: 1,
+                  color: (dark ? Colors.white : Colors.black)
+                      .withValues(alpha: 0.06),
+                ),
+              ),
+            _TaskRow(task: items[i], onToggle: () => toggle(items[i])),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _TaskRow extends ConsumerWidget {
+  const _TaskRow({required this.task, required this.onToggle});
+
+  final TaskItem task;
+  final VoidCallback onToggle;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final style = ref.watch(styleProvider);
+    final scheme = Theme.of(context).colorScheme;
+    final text = Theme.of(context).textTheme;
+    final dark = Theme.of(context).brightness == Brightness.dark;
+    final done = task.done;
+
+    return InkWell(
+      onTap: onToggle,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        child: Row(
+          children: [
+            _Check(done: done, accent: style.accent, onAccent: style.onAccent),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    task.title,
+                    style: text.titleMedium?.copyWith(
+                      decoration: done ? TextDecoration.lineThrough : null,
+                      decorationColor: scheme.onSurface.withValues(alpha: 0.45),
+                      color: done
+                          ? scheme.onSurface.withValues(alpha: 0.42)
+                          : scheme.onSurface,
+                      fontWeight: FontWeight.w700,
+                      height: 1.2,
+                    ),
+                  ),
+                  if (done && task.completedBy != null) ...[
+                    const SizedBox(height: 6),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(task.completedBy!.emoji,
+                            style: const TextStyle(fontSize: 13)),
+                        const SizedBox(width: 6),
+                        Text(
+                          'Done by ${task.completedBy!.name}',
+                          style: text.labelSmall?.copyWith(
+                            color: task.completedBy!.color,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ] else if (task.due != null) ...[
+                    const SizedBox(height: 8),
+                    _DueChip(
+                      due: task.due!,
+                      accent: style.accent,
+                      radius: style.chipRadius,
+                      dark: dark,
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            if (task.assignees.isNotEmpty) ...[
+              const SizedBox(width: 10),
+              _AvatarStack(
+                members: task.assignees,
+                ringColor: style.cardColor(dark),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _Check extends StatelessWidget {
+  const _Check({
+    required this.done,
+    required this.accent,
+    required this.onAccent,
+  });
+  final bool done;
+  final Color accent;
+  final Color onAccent;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 220),
+      curve: Curves.easeOut,
+      width: 26,
+      height: 26,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: done ? accent : Colors.transparent,
+        border: Border.all(
+          color: done ? accent : scheme.onSurfaceVariant.withValues(alpha: 0.5),
+          width: 2,
+        ),
+      ),
+      child: done ? Icon(Icons.check_rounded, size: 16, color: onAccent) : null,
+    );
+  }
+}
+
+class _DueChip extends StatelessWidget {
+  const _DueChip({
+    required this.due,
+    required this.accent,
+    required this.radius,
+    required this.dark,
+  });
+  final DateTime due;
+  final Color accent;
+  final double radius;
+  final bool dark;
+
+  String _label() {
+    final now = DateTime.now();
+    final diff = due.difference(now);
+    if (diff.inMinutes < 0) return 'Overdue';
+    if (diff.inHours < 1) return 'In ${diff.inMinutes} min';
+    if (diff.inHours < 24) return 'In ${diff.inHours} h';
+    return '${due.day}.${due.month}';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final overdue = due.difference(DateTime.now()).inMinutes < 0;
+    final scheme = Theme.of(context).colorScheme;
+    final c = overdue ? scheme.error : accent;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
+      decoration: BoxDecoration(
+        color: c.withValues(alpha: dark ? 0.16 : 0.12),
+        borderRadius: BorderRadius.circular(radius),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(overdue ? Icons.error_outline : Icons.schedule_rounded,
+              size: 13, color: c),
+          const SizedBox(width: 5),
+          Text(
+            _label(),
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: c,
+                  fontWeight: FontWeight.w700,
+                ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _AvatarStack extends StatelessWidget {
+  const _AvatarStack({required this.members, required this.ringColor});
+  final List<Member> members;
+  final Color ringColor;
+
+  @override
+  Widget build(BuildContext context) {
+    if (members.isEmpty) return const SizedBox.shrink();
+    final shown = members.take(3).toList();
+    const overlap = 18.0;
+    return SizedBox(
+      width: 30 + (shown.length - 1) * overlap,
+      height: 30,
+      child: Stack(
+        children: [
+          for (var i = 0; i < shown.length; i++)
+            Positioned(
+              left: i * overlap,
+              child: Container(
+                padding: const EdgeInsets.all(2),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: ringColor,
+                ),
+                child: CircleAvatar(
+                  radius: 13,
+                  backgroundColor: shown[i].color.withValues(alpha: 0.95),
+                  child: Text(
+                    shown[i].emoji,
+                    style: const TextStyle(fontSize: 13),
+                  ),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }

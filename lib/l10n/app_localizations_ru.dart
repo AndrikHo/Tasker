@@ -75,6 +75,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get markDone => 'Готово';
 
   @override
+  String get active => 'Активные';
+
+  @override
   String get edit => 'Редактировать';
 
   @override

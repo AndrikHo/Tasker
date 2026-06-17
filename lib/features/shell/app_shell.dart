@@ -7,9 +7,10 @@ import 'package:go_router/go_router.dart';
 import '../../core/providers/settings_provider.dart';
 import '../../core/theme/app_style.dart';
 import '../../l10n/app_localizations.dart';
-import '../tasks/add_task_sheet.dart';
 
-/// Bottom navigation shell hosting the main tabs with a center add button.
+/// Bottom navigation shell hosting the main tabs. Adding tasks lives inside
+/// the content (bento tiles), so the bar is a clean, evenly spaced row with
+/// no docked center button.
 class AppShell extends ConsumerWidget {
   const AppShell({super.key, required this.navigationShell});
 
@@ -30,12 +31,6 @@ class AppShell extends ConsumerWidget {
     return Scaffold(
       extendBody: true,
       body: navigationShell,
-      floatingActionButton: _GradientFab(
-        style: style,
-        tooltip: l10n.newTask,
-        onPressed: () => showAddTaskSheet(context),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: _GlassNavBar(
         style: style,
         currentIndex: navigationShell.currentIndex,
@@ -98,21 +93,12 @@ class _GlassNavBar extends StatelessWidget {
                 children: [
                   for (var i = 0; i < destinations.length; i++)
                     Expanded(
-                      // Leave the center clear for the docked FAB.
-                      child: i == 1
-                          ? _NavItem(
-                              spec: destinations[i],
-                              selected: currentIndex == i,
-                              accent: style.accent,
-                              onTap: () => onTap(i),
-                              padTop: 14,
-                            )
-                          : _NavItem(
-                              spec: destinations[i],
-                              selected: currentIndex == i,
-                              accent: style.accent,
-                              onTap: () => onTap(i),
-                            ),
+                      child: _NavItem(
+                        spec: destinations[i],
+                        selected: currentIndex == i,
+                        accent: style.accent,
+                        onTap: () => onTap(i),
+                      ),
                     ),
                 ],
               ),
@@ -130,14 +116,12 @@ class _NavItem extends StatelessWidget {
     required this.selected,
     required this.accent,
     required this.onTap,
-    this.padTop = 0,
   });
 
   final _NavSpec spec;
   final bool selected;
   final Color accent;
   final VoidCallback onTap;
-  final double padTop;
 
   @override
   Widget build(BuildContext context) {
@@ -146,80 +130,27 @@ class _NavItem extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
-      child: Padding(
-        padding: EdgeInsets.only(top: padTop),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            AnimatedSwitcher(
-              duration: const Duration(milliseconds: 200),
-              child: Icon(
-                selected ? spec.selectedIcon : spec.icon,
-                key: ValueKey(selected),
-                color: color,
-                size: 24,
-              ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 200),
+            child: Icon(
+              selected ? spec.selectedIcon : spec.icon,
+              key: ValueKey(selected),
+              color: color,
+              size: 24,
             ),
-            const SizedBox(height: 3),
-            Text(
-              spec.label,
-              style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: color,
-                    fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
-                  ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _GradientFab extends StatelessWidget {
-  const _GradientFab({
-    required this.style,
-    required this.onPressed,
-    required this.tooltip,
-  });
-
-  final AppStyle style;
-  final VoidCallback onPressed;
-  final String tooltip;
-
-  @override
-  Widget build(BuildContext context) {
-    final onAccent =
-        style.accent.computeLuminance() > 0.5 ? Colors.black : Colors.white;
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(style.buttonRadius + 4),
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [style.accent, style.accent2],
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: style.accent.withValues(alpha: 0.45),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
+          ),
+          const SizedBox(height: 3),
+          Text(
+            spec.label,
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: color,
+                  fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                ),
           ),
         ],
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onPressed,
-          borderRadius: BorderRadius.circular(style.buttonRadius + 4),
-          child: Tooltip(
-            message: tooltip,
-            child: SizedBox(
-              width: 58,
-              height: 58,
-              child: Icon(Icons.add, color: onAccent, size: 28),
-            ),
-          ),
-        ),
       ),
     );
   }
