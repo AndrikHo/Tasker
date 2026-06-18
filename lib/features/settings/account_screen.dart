@@ -8,22 +8,9 @@ import '../../core/widgets/feedback.dart';
 import '../../core/widgets/settings_tile.dart';
 import '../../core/widgets/surface_card.dart';
 import '../../l10n/app_localizations.dart';
+import '../characters/character.dart';
+import '../characters/character_art.dart';
 import '../tasks/task_providers.dart';
-
-/// Avatar palette + faces offered when editing the local profile. A stand-in
-/// until Supabase auth provides a real account with an uploaded photo.
-const _avatarColors = <Color>[
-  Color(0xFF22D3EE),
-  Color(0xFF818CF8),
-  Color(0xFFFB7185),
-  Color(0xFFFBBF24),
-  Color(0xFF4ADE80),
-  Color(0xFFF472B6),
-];
-
-const _avatarEmojis = <String>[
-  '🙂', '😎', '🚀', '🌟', '🐱', '🎧', '🦊', '🐼', '🔥', '🎮', '🌈', '⚡',
-];
 
 /// Account functions screen, bento-style: a profile hero tile followed by
 /// grouped action tiles. Name and avatar are editable locally; backend-bound
@@ -37,6 +24,7 @@ class AccountScreen extends ConsumerWidget {
     final style = ref.watch(styleProvider);
     final scheme = Theme.of(context).colorScheme;
     final profile = ref.watch(profileProvider);
+    final character = ref.watch(characterProvider);
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.account)),
@@ -49,7 +37,7 @@ class AccountScreen extends ConsumerWidget {
             onTap: () => _editAvatar(context, ref),
             child: Row(
               children: [
-                _AvatarRing(profile: profile, style: style, size: 76),
+                _AvatarRing(character: character, style: style, size: 76),
                 const SizedBox(width: 18),
                 Expanded(
                   child: Column(
@@ -203,7 +191,7 @@ class AccountScreen extends ConsumerWidget {
       context: context,
       showDragHandle: true,
       isScrollControlled: true,
-      builder: (context) => const _AvatarSheet(),
+      builder: (context) => const _CharacterSheet(),
     );
   }
 
@@ -266,16 +254,17 @@ class AccountScreen extends ConsumerWidget {
   }
 }
 
-/// Emoji + color picker that writes straight to the profile.
-class _AvatarSheet extends ConsumerWidget {
-  const _AvatarSheet();
+/// Character picker that sets the avatar and, with it, the whole app theme.
+/// Tapping a character applies it immediately; the sheet stays open so the
+/// theme change is visible behind it.
+class _CharacterSheet extends ConsumerWidget {
+  const _CharacterSheet();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
-    final profile = ref.watch(profileProvider);
-    final notifier = ref.read(profileProvider.notifier);
+    final current = ref.watch(characterProvider);
 
     return SafeArea(
       child: Padding(
@@ -285,17 +274,16 @@ class _AvatarSheet extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Center(
-              child: Container(
-                width: 84,
-                height: 84,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: profile.color.withValues(alpha: 0.22),
-                  border: Border.all(color: profile.color, width: 2),
+              child: CharacterArt(character: current, size: 92),
+            ),
+            const SizedBox(height: 8),
+            Center(
+              child: Text(
+                current.name,
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 0.3,
                 ),
-                alignment: Alignment.center,
-                child:
-                    Text(profile.emoji, style: const TextStyle(fontSize: 38)),
               ),
             ),
             const SizedBox(height: 20),
@@ -307,66 +295,27 @@ class _AvatarSheet extends ConsumerWidget {
                 letterSpacing: 1.2,
               ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 14),
             Wrap(
-              spacing: 10,
-              runSpacing: 10,
+              spacing: 14,
+              runSpacing: 14,
               children: [
-                for (final c in _avatarColors)
+                for (final c in kCharacters)
                   GestureDetector(
-                    onTap: () => notifier.setAvatar(
-                        emoji: profile.emoji, colorValue: c.toARGB32()),
+                    onTap: () =>
+                        ref.read(characterProvider.notifier).set(c),
                     child: Container(
-                      width: 40,
-                      height: 40,
+                      padding: const EdgeInsets.all(4),
                       decoration: BoxDecoration(
-                        color: c,
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: c.toARGB32() == profile.colorValue
-                              ? theme.colorScheme.onSurface
+                          color: c.id == current.id
+                              ? c.color
                               : Colors.transparent,
                           width: 3,
                         ),
                       ),
-                      child: c.toARGB32() == profile.colorValue
-                          ? Icon(Icons.check,
-                              size: 20,
-                              color: c.computeLuminance() > 0.5
-                                  ? Colors.black
-                                  : Colors.white)
-                          : null,
-                    ),
-                  ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Wrap(
-              spacing: 10,
-              runSpacing: 10,
-              children: [
-                for (final e in _avatarEmojis)
-                  GestureDetector(
-                    onTap: () => notifier.setAvatar(
-                        emoji: e, colorValue: profile.colorValue),
-                    child: Container(
-                      width: 46,
-                      height: 46,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: e == profile.emoji
-                            ? profile.color.withValues(alpha: 0.20)
-                            : theme.colorScheme.onSurfaceVariant
-                                .withValues(alpha: 0.08),
-                        borderRadius: BorderRadius.circular(14),
-                        border: Border.all(
-                          color: e == profile.emoji
-                              ? profile.color
-                              : Colors.transparent,
-                          width: 2,
-                        ),
-                      ),
-                      child: Text(e, style: const TextStyle(fontSize: 22)),
+                      child: CharacterArt(character: c, size: 56),
                     ),
                   ),
               ],
@@ -420,11 +369,11 @@ class _GroupDivider extends StatelessWidget {
 
 class _AvatarRing extends StatelessWidget {
   const _AvatarRing({
-    required this.profile,
+    required this.character,
     required this.style,
     this.size = 104,
   });
-  final Profile profile;
+  final Character character;
   final AppStyle style;
   final double size;
 
@@ -445,21 +394,21 @@ class _AvatarRing extends StatelessWidget {
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [profile.color, style.accent2],
+                colors: [character.color, style.accent2],
               ),
               boxShadow: [
                 BoxShadow(
-                  color: profile.color.withValues(alpha: 0.30),
+                  color: character.color.withValues(alpha: 0.30),
                   blurRadius: 18,
                   offset: const Offset(0, 6),
                 ),
               ],
             ),
-            child: CircleAvatar(
-              backgroundColor: scheme.surfaceContainerHigh,
-              child: Text(
-                profile.emoji,
-                style: TextStyle(fontSize: size * 0.40),
+            child: ClipOval(
+              child: Container(
+                color: scheme.surfaceContainerHigh,
+                alignment: Alignment.center,
+                child: CharacterArt(character: character, size: size - 6),
               ),
             ),
           ),

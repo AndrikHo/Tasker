@@ -205,7 +205,7 @@ class FriendsNotifier extends StateNotifier<List<Member>> {
   ];
   static const _emojis = <String>['🙂', '😎', '🚀', '🌟', '🐱', '🎧'];
 
-  /// Adds a friend referenced by account id (#<id>). Color/emoji are derived
+  /// Adds a friend referenced by account id (`#<id>`). Color/emoji are derived
   /// deterministically until real profiles arrive from the backend.
   void addById(String accountId) {
     final n = state.length;

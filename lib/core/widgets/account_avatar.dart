@@ -4,9 +4,10 @@ import 'package:go_router/go_router.dart';
 
 import '../providers/settings_provider.dart';
 import '../theme/app_style.dart';
+import '../../features/characters/character_art.dart';
 
-/// The account avatar: a gradient ring around a circular avatar. Tapping it
-/// opens account settings. Shared by the lists header and any app bar.
+/// The account avatar: a gradient ring around the selected character. Tapping
+/// it opens account settings. Shared by the lists header and any app bar.
 class AccountAvatar extends ConsumerWidget {
   const AccountAvatar({super.key, this.radius = 19});
 
@@ -14,8 +15,8 @@ class AccountAvatar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final style = ref.watch(styleProvider);
-    final scheme = Theme.of(context).colorScheme;
+    final character = ref.watch(characterProvider);
+    final accent2 = character.look.accent2;
     return GestureDetector(
       onTap: () => context.go('/settings/account'),
       child: Container(
@@ -25,20 +26,22 @@ class AccountAvatar extends ConsumerWidget {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [style.accent, style.accent2],
+            colors: [character.color, accent2],
           ),
           boxShadow: [
             BoxShadow(
-              color: style.accent.withValues(alpha: 0.30),
+              color: character.color.withValues(alpha: 0.30),
               blurRadius: 14,
               offset: const Offset(0, 4),
             ),
           ],
         ),
-        child: CircleAvatar(
-          radius: radius,
-          backgroundColor: scheme.surfaceContainerHigh,
-          child: Icon(Icons.person, size: radius + 1, color: scheme.onSurface),
+        child: ClipOval(
+          child: SizedBox(
+            width: radius * 2,
+            height: radius * 2,
+            child: CharacterArt(character: character, size: radius * 2),
+          ),
         ),
       ),
     );

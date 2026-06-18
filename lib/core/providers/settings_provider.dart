@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../features/characters/character.dart';
 import '../theme/app_style.dart';
 
 /// Provides the SharedPreferences instance. Overridden in main().
@@ -11,7 +12,7 @@ final sharedPreferencesProvider = Provider<SharedPreferences>(
 
 const _kThemeModeKey = 'theme_mode';
 const _kLocaleKey = 'locale';
-const _kStyleKey = 'app_style';
+const _kCharacterKey = 'character_id';
 const _kBuddiesKey = 'buddies_enabled';
 const _kProfileNameKey = 'profile_name';
 const _kProfileEmojiKey = 'profile_emoji';
@@ -74,22 +75,32 @@ final localeProvider =
   return LocaleNotifier(ref.watch(sharedPreferencesProvider));
 });
 
-/// Active visual style (playful / neutral / glass), persisted.
-class StyleNotifier extends StateNotifier<AppStyle> {
-  StyleNotifier(this._prefs)
-      : super(AppStyleX.fromId(_prefs.getString(_kStyleKey)));
+/// The chosen character, persisted. Picking a character is the single control
+/// that drives both the profile avatar and the app theme: see [styleProvider],
+/// which derives the visual style from the selected character's look.
+/// Changeable at any time.
+class CharacterNotifier extends StateNotifier<Character> {
+  CharacterNotifier(this._prefs)
+      : super(characterById(_prefs.getString(_kCharacterKey)));
 
   final SharedPreferences _prefs;
 
-  Future<void> set(AppStyle style) async {
-    state = style;
-    await _prefs.setString(_kStyleKey, style.id);
+  Future<void> set(Character character) async {
+    state = character;
+    await _prefs.setString(_kCharacterKey, character.id);
   }
 }
 
-final styleProvider =
-    StateNotifierProvider<StyleNotifier, AppStyle>((ref) {
-  return StyleNotifier(ref.watch(sharedPreferencesProvider));
+final characterProvider =
+    StateNotifierProvider<CharacterNotifier, Character>((ref) {
+  return CharacterNotifier(ref.watch(sharedPreferencesProvider));
+});
+
+/// Active visual style, derived from the selected character's [Character.look].
+/// Kept as an [AppStyle] provider so the whole theme engine and every existing
+/// `ref.watch(styleProvider)` call site keep working unchanged.
+final styleProvider = Provider<AppStyle>((ref) {
+  return ref.watch(characterProvider).look;
 });
 
 /// Whether the "LIFE FRIENDS" buddies peek in over the app, persisted.

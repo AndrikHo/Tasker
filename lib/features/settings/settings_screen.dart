@@ -8,6 +8,8 @@ import '../../core/widgets/bento.dart';
 import '../../core/widgets/settings_tile.dart';
 import '../../core/widgets/surface_card.dart';
 import '../../l10n/app_localizations.dart';
+import '../characters/character.dart';
+import '../characters/character_art.dart';
 
 /// Supported UI languages (must match ARB files in lib/l10n/arb).
 const supportedLanguages = <String, String>{
@@ -32,7 +34,7 @@ class SettingsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final themeMode = ref.watch(themeModeProvider);
-    final style = ref.watch(styleProvider);
+    final character = ref.watch(characterProvider);
     final buddies = ref.watch(buddyEnabledProvider);
     final profile = ref.watch(profileProvider);
     final locale = ref.watch(localeProvider);
@@ -109,7 +111,7 @@ class SettingsScreen extends ConsumerWidget {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: kBentoPad),
-              child: _StyleGrid(current: style),
+              child: _CharacterGallery(current: character),
             ),
           ],
         ),
@@ -227,30 +229,31 @@ class _LanguageRow extends ConsumerWidget {
   }
 }
 
-/// The visual-style picker as a 3-up bento grid of gradient-swatch tiles.
-class _StyleGrid extends ConsumerWidget {
-  const _StyleGrid({required this.current});
-  final AppStyle current;
+/// The character picker as a 2-up bento grid. Picking a character sets the
+/// profile avatar and drives the whole app theme (its [Character.look]).
+class _CharacterGallery extends ConsumerWidget {
+  const _CharacterGallery({required this.current});
+  final Character current;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final styles = AppStyle.values;
+    const items = kCharacters;
     return Column(
       children: [
-        for (var row = 0; row < styles.length; row += 2) ...[
+        for (var row = 0; row < items.length; row += 2) ...[
           if (row > 0) const SizedBox(height: kBentoGap),
           Row(
             children: [
               for (var col = 0; col < 2; col++) ...[
                 if (col > 0) const SizedBox(width: kBentoGap),
                 Expanded(
-                  child: row + col < styles.length
-                      ? _StyleCard(
-                          style: styles[row + col],
-                          selected: styles[row + col] == current,
+                  child: row + col < items.length
+                      ? _CharacterCard(
+                          character: items[row + col],
+                          selected: items[row + col].id == current.id,
                           onTap: () => ref
-                              .read(styleProvider.notifier)
-                              .set(styles[row + col]),
+                              .read(characterProvider.notifier)
+                              .set(items[row + col]),
                         )
                       : const SizedBox.shrink(),
                 ),
@@ -263,14 +266,14 @@ class _StyleGrid extends ConsumerWidget {
   }
 }
 
-class _StyleCard extends StatelessWidget {
-  const _StyleCard({
-    required this.style,
+class _CharacterCard extends StatelessWidget {
+  const _CharacterCard({
+    required this.character,
     required this.selected,
     required this.onTap,
   });
 
-  final AppStyle style;
+  final Character character;
   final bool selected;
   final VoidCallback onTap;
 
@@ -278,51 +281,48 @@ class _StyleCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final dark = theme.brightness == Brightness.dark;
+    final look = character.look;
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
-        duration: style.motion,
-        curve: style.curve,
-        height: 132,
+        duration: look.motion,
+        curve: look.curve,
+        height: 150,
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
           color: selected
-              ? style.accent.withValues(alpha: dark ? 0.18 : 0.14)
-              : style.cardColor(dark),
-          borderRadius: BorderRadius.circular(style.cardRadius),
+              ? character.color.withValues(alpha: dark ? 0.18 : 0.14)
+              : look.cardColor(dark),
+          borderRadius: BorderRadius.circular(look.cardRadius),
           border: Border.all(
-            color: selected ? style.accent : style.hairline(dark),
+            color: selected ? character.color : look.hairline(dark),
             width: selected ? 2 : 1,
           ),
-          boxShadow: selected ? null : style.cardShadow(dark),
+          boxShadow: selected ? null : look.cardShadow(dark),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              height: 46,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(style.chipRadius),
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [style.accent, style.accent2],
-                ),
+            Expanded(
+              child: Center(
+                child: CharacterArt(character: character, size: 76),
               ),
             ),
-            const Spacer(),
             Row(
               children: [
                 Expanded(
                   child: Text(
-                    style.label,
+                    character.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: theme.textTheme.labelLarge?.copyWith(
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: 0.3,
                     ),
                   ),
                 ),
                 if (selected)
-                  Icon(Icons.check_circle, size: 16, color: style.accent),
+                  Icon(Icons.check_circle, size: 16, color: character.color),
               ],
             ),
           ],
