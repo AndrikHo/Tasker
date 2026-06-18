@@ -5,6 +5,7 @@ import '../../core/providers/settings_provider.dart';
 import '../../core/theme/app_style.dart';
 import '../../core/widgets/feedback.dart';
 import '../../l10n/app_localizations.dart';
+import 'priority_selector.dart';
 import 'task_model.dart';
 import 'task_providers.dart';
 
@@ -34,6 +35,7 @@ class _AddTaskSheet extends ConsumerStatefulWidget {
 class _AddTaskSheetState extends ConsumerState<_AddTaskSheet> {
   final _controller = TextEditingController();
   bool _canAdd = false;
+  Priority _priority = Priority.low;
 
   @override
   void initState() {
@@ -59,6 +61,7 @@ class _AddTaskSheetState extends ConsumerState<_AddTaskSheet> {
             id: 't_${DateTime.now().microsecondsSinceEpoch}',
             title: title,
             assignees: const [DemoMembers.me],
+            priority: _priority,
           ),
         );
     Navigator.pop(context);
@@ -98,7 +101,21 @@ class _AddTaskSheetState extends ConsumerState<_AddTaskSheet> {
                 ),
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 18),
+            Text(
+              l10n.priority.toUpperCase(),
+              style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 1.1,
+                  ),
+            ),
+            const SizedBox(height: 10),
+            PrioritySegment(
+              value: _priority,
+              onChanged: (p) => setState(() => _priority = p),
+            ),
+            const SizedBox(height: 18),
             SizedBox(
               width: double.infinity,
               child: FilledButton.icon(

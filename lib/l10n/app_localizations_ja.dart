@@ -172,4 +172,19 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get dataDeleted => 'データを削除しました';
+
+  @override
+  String get priority => '優先度';
+
+  @override
+  String get priorityHigh => '緊急';
+
+  @override
+  String get priorityMedium => '中';
+
+  @override
+  String get priorityLow => '低';
+
+  @override
+  String get needsAttention => '要対応';
 }

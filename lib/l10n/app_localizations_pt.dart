@@ -173,4 +173,19 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get dataDeleted => 'Dados excluídos';
+
+  @override
+  String get priority => 'Prioridade';
+
+  @override
+  String get priorityHigh => 'Urgente';
+
+  @override
+  String get priorityMedium => 'Média';
+
+  @override
+  String get priorityLow => 'Baixa';
+
+  @override
+  String get needsAttention => 'Precisa de atenção';
 }

@@ -173,4 +173,19 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get dataDeleted => 'डेटा हटा दिया गया';
+
+  @override
+  String get priority => 'प्राथमिकता';
+
+  @override
+  String get priorityHigh => 'अत्यावश्यक';
+
+  @override
+  String get priorityMedium => 'मध्यम';
+
+  @override
+  String get priorityLow => 'कम';
+
+  @override
+  String get needsAttention => 'ध्यान देने की ज़रूरत';
 }

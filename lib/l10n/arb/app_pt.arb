@@ -54,5 +54,10 @@
   "signInRequired": "Login necessário",
   "deleteDataMessage": "Isso redefine suas listas, tarefas e amigos. Não pode ser desfeito.",
   "deleteAccountMessage": "Isso exclui sua conta permanentemente.",
-  "dataDeleted": "Dados excluídos"
+  "dataDeleted": "Dados excluídos",
+  "priority": "Prioridade",
+  "priorityHigh": "Urgente",
+  "priorityMedium": "Média",
+  "priorityLow": "Baixa",
+  "needsAttention": "Precisa de atenção"
 }

@@ -86,6 +86,7 @@ create table if not exists public.tasks (
   completed_by uuid references public.profiles (id) on delete set null,
   completed_at timestamptz,
   due_at       timestamptz,
+  priority     text not null default 'low' check (priority in ('high','medium','low')),
   position     int not null default 0,
   created_at   timestamptz not null default now(),
   updated_at   timestamptz not null default now()

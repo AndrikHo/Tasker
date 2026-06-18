@@ -54,5 +54,10 @@
   "signInRequired": "تسجيل الدخول مطلوب",
   "deleteDataMessage": "سيؤدي هذا إلى إعادة تعيين قوائمك ومهامك وأصدقائك. لا يمكن التراجع عن ذلك.",
   "deleteAccountMessage": "سيؤدي هذا إلى حذف حسابك نهائيًا.",
-  "dataDeleted": "تم حذف البيانات"
+  "dataDeleted": "تم حذف البيانات",
+  "priority": "الأولوية",
+  "priorityHigh": "عاجل",
+  "priorityMedium": "متوسط",
+  "priorityLow": "منخفض",
+  "needsAttention": "يحتاج إلى انتباه"
 }

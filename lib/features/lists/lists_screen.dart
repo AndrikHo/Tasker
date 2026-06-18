@@ -9,6 +9,7 @@ import '../../core/widgets/bento.dart';
 import '../../core/widgets/surface_card.dart';
 import '../../l10n/app_localizations.dart';
 import '../tasks/add_task_sheet.dart';
+import '../tasks/priority_selector.dart';
 import '../tasks/task_model.dart';
 import '../tasks/task_providers.dart';
 import 'new_list_sheet.dart';
@@ -28,6 +29,17 @@ String listDisplayName(TaskList list, AppLocalizations l10n) {
     default:
       return list.name ?? '';
   }
+}
+
+/// Sorts active tasks by importance first (high rises to the top), then by the
+/// soonest deadline, with undated tasks trailing.
+int _byPriorityThenDue(TaskItem a, TaskItem b) {
+  final r = a.priority.rank.compareTo(b.priority.rank);
+  if (r != 0) return r;
+  if (a.due == null && b.due == null) return 0;
+  if (a.due == null) return 1;
+  if (b.due == null) return -1;
+  return a.due!.compareTo(b.due!);
 }
 
 /// Lists home, bento-style: an editorial greeting header, a list switcher
@@ -55,8 +67,9 @@ class _ListsScreenState extends ConsumerState<ListsScreen> {
     final date = DateFormat.MMMMEEEEd(locale).format(DateTime.now());
 
     final tasks = tasksByList[list.id] ?? const <TaskItem>[];
-    final active = tasks.where((t) => !t.done).toList();
+    final active = tasks.where((t) => !t.done).toList()..sort(_byPriorityThenDue);
     final done = tasks.where((t) => t.done).toList();
+    final urgent = active.where((t) => t.priority == Priority.high).toList();
     final pct = tasks.isEmpty ? 0 : (done.length / tasks.length * 100).round();
 
     void toggle(TaskItem t) =>
@@ -143,6 +156,18 @@ class _ListsScreenState extends ConsumerState<ListsScreen> {
               ),
             ),
 
+            if (urgent.isNotEmpty)
+              SliverPadding(
+                padding: const EdgeInsets.fromLTRB(kBentoPad, 16, kBentoPad, 0),
+                sliver: SliverToBoxAdapter(
+                  child: _NeedsAttentionBanner(
+                    items: urgent,
+                    title: l10n.needsAttention,
+                    onTap: toggle,
+                  ),
+                ),
+              ),
+
             if (tasks.isEmpty)
               SliverToBoxAdapter(
                 child: Padding(
@@ -163,7 +188,8 @@ class _ListsScreenState extends ConsumerState<ListsScreen> {
                   padding:
                       const EdgeInsets.fromLTRB(kBentoPad, 18, kBentoPad, 0),
                   sliver: SliverToBoxAdapter(
-                    child: _TaskGroup(items: active, toggle: toggle),
+                    child: _TaskGroup(
+                        listId: list.id, items: active, toggle: toggle),
                   ),
                 ),
               if (done.isNotEmpty) ...[
@@ -171,7 +197,8 @@ class _ListsScreenState extends ConsumerState<ListsScreen> {
                 SliverPadding(
                   padding: const EdgeInsets.fromLTRB(kBentoPad, 0, kBentoPad, 0),
                   sliver: SliverToBoxAdapter(
-                    child: _TaskGroup(items: done, toggle: toggle),
+                    child: _TaskGroup(
+                        listId: list.id, items: done, toggle: toggle),
                   ),
                 ),
               ],
@@ -441,10 +468,112 @@ class _SectionLabel extends StatelessWidget {
   }
 }
 
+/// A red "needs attention" banner that surfaces every high-priority task at
+/// the top of the list. Tapping a row completes it; clearing the last urgent
+/// task removes the banner. The red + flame styling is fixed, theme-agnostic.
+class _NeedsAttentionBanner extends StatelessWidget {
+  const _NeedsAttentionBanner({
+    required this.items,
+    required this.title,
+    required this.onTap,
+  });
+
+  final List<TaskItem> items;
+  final String title;
+  final void Function(TaskItem) onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final dark = theme.brightness == Brightness.dark;
+    const red = Color(0xFFEF4444);
+    return Container(
+      padding: const EdgeInsets.fromLTRB(16, 14, 12, 12),
+      decoration: BoxDecoration(
+        color: red.withValues(alpha: dark ? 0.14 : 0.10),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: red.withValues(alpha: 0.55), width: 1.5),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.local_fire_department_rounded,
+                  size: 20, color: red),
+              const SizedBox(width: 8),
+              Text(
+                title.toUpperCase(),
+                style: theme.textTheme.labelLarge?.copyWith(
+                  color: red,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 0.6,
+                ),
+              ),
+              const Spacer(),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 1),
+                decoration: BoxDecoration(
+                  color: red,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  '${items.length}',
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          for (final t in items)
+            InkWell(
+              onTap: () => onTap(t),
+              borderRadius: BorderRadius.circular(12),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 4),
+                child: Row(
+                  children: [
+                    Icon(Icons.radio_button_unchecked,
+                        size: 20, color: red.withValues(alpha: 0.85)),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        t.title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: theme.colorScheme.onSurface,
+                        ),
+                      ),
+                    ),
+                    if (t.due != null) ...[
+                      const SizedBox(width: 8),
+                      Icon(Icons.schedule_rounded,
+                          size: 14, color: red.withValues(alpha: 0.9)),
+                    ],
+                  ],
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
 /// A group of task rows inside a single elevated surface, divided by hairlines.
 class _TaskGroup extends ConsumerWidget {
-  const _TaskGroup({required this.items, required this.toggle});
+  const _TaskGroup({
+    required this.listId,
+    required this.items,
+    required this.toggle,
+  });
 
+  final String listId;
   final List<TaskItem> items;
   final void Function(TaskItem) toggle;
 
@@ -466,7 +595,11 @@ class _TaskGroup extends ConsumerWidget {
                       .withValues(alpha: 0.06),
                 ),
               ),
-            _TaskRow(task: items[i], onToggle: () => toggle(items[i])),
+            _TaskRow(
+              listId: listId,
+              task: items[i],
+              onToggle: () => toggle(items[i]),
+            ),
           ],
         ],
       ),
@@ -475,10 +608,22 @@ class _TaskGroup extends ConsumerWidget {
 }
 
 class _TaskRow extends ConsumerWidget {
-  const _TaskRow({required this.task, required this.onToggle});
+  const _TaskRow({
+    required this.listId,
+    required this.task,
+    required this.onToggle,
+  });
 
+  final String listId;
   final TaskItem task;
   final VoidCallback onToggle;
+
+  Future<void> _changePriority(BuildContext context, WidgetRef ref) async {
+    final chosen = await showPriorityPicker(context, current: task.priority);
+    if (chosen != null && chosen != task.priority) {
+      ref.read(tasksProvider.notifier).setPriority(listId, task.id, chosen);
+    }
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -487,9 +632,11 @@ class _TaskRow extends ConsumerWidget {
     final text = Theme.of(context).textTheme;
     final dark = Theme.of(context).brightness == Brightness.dark;
     final done = task.done;
+    final showMarker = !done && task.priority.showsMarker;
 
     return InkWell(
       onTap: onToggle,
+      onLongPress: () => _changePriority(context, ref),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         child: Row(
@@ -500,17 +647,30 @@ class _TaskRow extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    task.title,
-                    style: text.titleMedium?.copyWith(
-                      decoration: done ? TextDecoration.lineThrough : null,
-                      decorationColor: scheme.onSurface.withValues(alpha: 0.45),
-                      color: done
-                          ? scheme.onSurface.withValues(alpha: 0.42)
-                          : scheme.onSurface,
-                      fontWeight: FontWeight.w700,
-                      height: 1.2,
-                    ),
+                  Row(
+                    children: [
+                      if (showMarker) ...[
+                        Icon(task.priority.icon,
+                            size: 15, color: task.priority.color),
+                        const SizedBox(width: 6),
+                      ],
+                      Flexible(
+                        child: Text(
+                          task.title,
+                          style: text.titleMedium?.copyWith(
+                            decoration:
+                                done ? TextDecoration.lineThrough : null,
+                            decorationColor:
+                                scheme.onSurface.withValues(alpha: 0.45),
+                            color: done
+                                ? scheme.onSurface.withValues(alpha: 0.42)
+                                : scheme.onSurface,
+                            fontWeight: FontWeight.w700,
+                            height: 1.2,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   if (done && task.completedBy != null) ...[
                     const SizedBox(height: 6),

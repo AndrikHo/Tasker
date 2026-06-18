@@ -173,4 +173,19 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get dataDeleted => 'Data dihapus';
+
+  @override
+  String get priority => 'Prioritas';
+
+  @override
+  String get priorityHigh => 'Mendesak';
+
+  @override
+  String get priorityMedium => 'Sedang';
+
+  @override
+  String get priorityLow => 'Rendah';
+
+  @override
+  String get needsAttention => 'Perlu perhatian';
 }

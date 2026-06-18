@@ -173,4 +173,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dataDeleted => 'Data deleted';
+
+  @override
+  String get priority => 'Priority';
+
+  @override
+  String get priorityHigh => 'Urgent';
+
+  @override
+  String get priorityMedium => 'Medium';
+
+  @override
+  String get priorityLow => 'Low';
+
+  @override
+  String get needsAttention => 'Needs attention';
 }

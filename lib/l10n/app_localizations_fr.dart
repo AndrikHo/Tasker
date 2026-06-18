@@ -174,4 +174,19 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get dataDeleted => 'Données supprimées';
+
+  @override
+  String get priority => 'Priorité';
+
+  @override
+  String get priorityHigh => 'Urgent';
+
+  @override
+  String get priorityMedium => 'Moyenne';
+
+  @override
+  String get priorityLow => 'Faible';
+
+  @override
+  String get needsAttention => 'À traiter';
 }

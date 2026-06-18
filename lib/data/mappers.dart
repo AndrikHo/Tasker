@@ -99,6 +99,7 @@ class Mappers {
       ],
       due: due == null ? null : DateTime.tryParse(due),
       note: row['note'] as String?,
+      priority: PriorityX.fromId(row['priority'] as String?),
     );
   }
 
@@ -116,6 +117,7 @@ class Mappers {
       'done': task.done,
       'completed_by': task.completedBy?.id,
       'due_at': task.due?.toUtc().toIso8601String(),
+      'priority': task.priority.id,
       'position': position,
     };
   }

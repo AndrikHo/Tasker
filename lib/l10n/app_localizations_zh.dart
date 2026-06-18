@@ -172,4 +172,19 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get dataDeleted => '数据已删除';
+
+  @override
+  String get priority => '优先级';
+
+  @override
+  String get priorityHigh => '紧急';
+
+  @override
+  String get priorityMedium => '中等';
+
+  @override
+  String get priorityLow => '低';
+
+  @override
+  String get needsAttention => '需要关注';
 }

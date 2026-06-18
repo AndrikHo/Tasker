@@ -173,4 +173,19 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get dataDeleted => 'تم حذف البيانات';
+
+  @override
+  String get priority => 'الأولوية';
+
+  @override
+  String get priorityHigh => 'عاجل';
+
+  @override
+  String get priorityMedium => 'متوسط';
+
+  @override
+  String get priorityLow => 'منخفض';
+
+  @override
+  String get needsAttention => 'يحتاج إلى انتباه';
 }

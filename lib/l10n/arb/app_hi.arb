@@ -54,5 +54,10 @@
   "signInRequired": "साइन इन आवश्यक है",
   "deleteDataMessage": "इससे आपकी सूचियाँ, कार्य और मित्र रीसेट हो जाएँगे। इसे पूर्ववत नहीं किया जा सकता।",
   "deleteAccountMessage": "इससे आपका खाता स्थायी रूप से हट जाएगा।",
-  "dataDeleted": "डेटा हटा दिया गया"
+  "dataDeleted": "डेटा हटा दिया गया",
+  "priority": "प्राथमिकता",
+  "priorityHigh": "अत्यावश्यक",
+  "priorityMedium": "मध्यम",
+  "priorityLow": "कम",
+  "needsAttention": "ध्यान देने की ज़रूरत"
 }

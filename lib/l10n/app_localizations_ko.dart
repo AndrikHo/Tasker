@@ -172,4 +172,19 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get dataDeleted => '데이터가 삭제되었습니다';
+
+  @override
+  String get priority => '우선순위';
+
+  @override
+  String get priorityHigh => '긴급';
+
+  @override
+  String get priorityMedium => '보통';
+
+  @override
+  String get priorityLow => '낮음';
+
+  @override
+  String get needsAttention => '주의가 필요해요';
 }

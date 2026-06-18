@@ -54,5 +54,10 @@
   "signInRequired": "Требуется вход",
   "deleteDataMessage": "Списки, задачи и друзья будут сброшены. Это нельзя отменить.",
   "deleteAccountMessage": "Это навсегда удалит вашу учётную запись.",
-  "dataDeleted": "Данные удалены"
+  "dataDeleted": "Данные удалены",
+  "priority": "Приоритет",
+  "priorityHigh": "Срочно",
+  "priorityMedium": "Средний",
+  "priorityLow": "Низкий",
+  "needsAttention": "Требует внимания"
 }

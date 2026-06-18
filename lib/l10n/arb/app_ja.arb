@@ -54,5 +54,10 @@
   "signInRequired": "サインインが必要です",
   "deleteDataMessage": "リスト、タスク、友だちがリセットされます。元に戻せません。",
   "deleteAccountMessage": "アカウントが完全に削除されます。",
-  "dataDeleted": "データを削除しました"
+  "dataDeleted": "データを削除しました",
+  "priority": "優先度",
+  "priorityHigh": "緊急",
+  "priorityMedium": "中",
+  "priorityLow": "低",
+  "needsAttention": "要対応"
 }

@@ -173,4 +173,19 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get dataDeleted => 'Данные удалены';
+
+  @override
+  String get priority => 'Приоритет';
+
+  @override
+  String get priorityHigh => 'Срочно';
+
+  @override
+  String get priorityMedium => 'Средний';
+
+  @override
+  String get priorityLow => 'Низкий';
+
+  @override
+  String get needsAttention => 'Требует внимания';
 }

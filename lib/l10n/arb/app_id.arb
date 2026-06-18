@@ -54,5 +54,10 @@
   "signInRequired": "Perlu masuk",
   "deleteDataMessage": "Ini akan mengatur ulang daftar, tugas, dan teman Anda. Tidak dapat dibatalkan.",
   "deleteAccountMessage": "Ini menghapus akun Anda secara permanen.",
-  "dataDeleted": "Data dihapus"
+  "dataDeleted": "Data dihapus",
+  "priority": "Prioritas",
+  "priorityHigh": "Mendesak",
+  "priorityMedium": "Sedang",
+  "priorityLow": "Rendah",
+  "needsAttention": "Perlu perhatian"
 }

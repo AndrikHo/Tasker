@@ -127,6 +127,15 @@ class TasksNotifier extends StateNotifier<Map<String, List<TaskItem>>> {
     state = {...state, listId: items};
   }
 
+  /// Sets a task's [priority].
+  void setPriority(String listId, String taskId, Priority priority) {
+    final items = [...?state[listId]];
+    final i = items.indexWhere((t) => t.id == taskId);
+    if (i == -1) return;
+    items[i] = items[i].copyWith(priority: priority);
+    state = {...state, listId: items};
+  }
+
   /// Wipes all task data back to an empty store (used by "delete data").
   void clearAll() {
     state = {for (final entry in state.entries) entry.key: const <TaskItem>[]};
@@ -141,11 +150,13 @@ class TasksNotifier extends StateNotifier<Map<String, List<TaskItem>>> {
           title: 'Morning run, 5 km',
           assignees: const [DemoMembers.me],
           due: now.add(const Duration(hours: 2)),
+          priority: Priority.medium,
         ),
         const TaskItem(
           id: 'p2',
           title: 'Reply to landlord',
           assignees: [DemoMembers.me],
+          priority: Priority.high,
         ),
         const TaskItem(
           id: 'p3',
@@ -169,6 +180,7 @@ class TasksNotifier extends StateNotifier<Map<String, List<TaskItem>>> {
           title: 'Pick up Leo from school',
           assignees: const [DemoMembers.wife],
           due: now.add(const Duration(hours: 5)),
+          priority: Priority.high,
         ),
         const TaskItem(
           id: 'f3',

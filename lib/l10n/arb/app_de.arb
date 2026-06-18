@@ -54,5 +54,10 @@
   "signInRequired": "Anmeldung erforderlich",
   "deleteDataMessage": "Dies setzt deine Listen, Aufgaben und Freunde zurück. Das kann nicht rückgängig gemacht werden.",
   "deleteAccountMessage": "Dies löscht dein Konto dauerhaft.",
-  "dataDeleted": "Daten gelöscht"
+  "dataDeleted": "Daten gelöscht",
+  "priority": "Priorität",
+  "priorityHigh": "Dringend",
+  "priorityMedium": "Mittel",
+  "priorityLow": "Niedrig",
+  "needsAttention": "Braucht Aufmerksamkeit"
 }

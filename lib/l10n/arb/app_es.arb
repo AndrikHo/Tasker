@@ -54,5 +54,10 @@
   "signInRequired": "Inicio de sesión requerido",
   "deleteDataMessage": "Esto restablece tus listas, tareas y amigos. No se puede deshacer.",
   "deleteAccountMessage": "Esto elimina tu cuenta de forma permanente.",
-  "dataDeleted": "Datos eliminados"
+  "dataDeleted": "Datos eliminados",
+  "priority": "Prioridad",
+  "priorityHigh": "Urgente",
+  "priorityMedium": "Media",
+  "priorityLow": "Baja",
+  "needsAttention": "Requiere atención"
 }

@@ -57,5 +57,10 @@
   "signInRequired": "Sign in required",
   "deleteDataMessage": "This resets your lists, tasks and friends. This cannot be undone.",
   "deleteAccountMessage": "This permanently deletes your account.",
-  "dataDeleted": "Data deleted"
+  "dataDeleted": "Data deleted",
+  "priority": "Priority",
+  "priorityHigh": "Urgent",
+  "priorityMedium": "Medium",
+  "priorityLow": "Low",
+  "needsAttention": "Needs attention"
 }
