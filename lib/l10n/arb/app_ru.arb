@@ -59,5 +59,21 @@
   "priorityHigh": "Срочно",
   "priorityMedium": "Средний",
   "priorityLow": "Низкий",
-  "needsAttention": "Требует внимания"
+  "needsAttention": "Требует внимания",
+  "signIn": "Войти",
+  "createAccount": "Создать аккаунт",
+  "email": "Эл. почта",
+  "password": "Пароль",
+  "emailInvalid": "Введите корректный адрес почты",
+  "passwordTooShort": "Пароль должен быть не короче 6 символов",
+  "noAccountPrompt": "Впервые здесь? Создайте аккаунт",
+  "haveAccountPrompt": "Уже есть аккаунт? Войдите",
+  "checkEmailTitle": "Проверьте почту",
+  "checkEmailMessage": "Мы отправили ссылку для подтверждения. Подтвердите её и войдите.",
+  "authFailed": "Не удалось войти. Проверьте данные и попробуйте снова.",
+  "tagline": "Задачи вместе.",
+  "friendCodeHint": "ABC123",
+  "logoutMessage": "Чтобы вернуться к задачам, нужно войти снова.",
+  "genericError": "Что-то пошло не так. Попробуйте снова.",
+  "orContinueWith": "или войти через"
 }

@@ -187,4 +187,52 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get needsAttention => '需要关注';
+
+  @override
+  String get signIn => '登录';
+
+  @override
+  String get createAccount => '创建账户';
+
+  @override
+  String get email => '电子邮件';
+
+  @override
+  String get password => '密码';
+
+  @override
+  String get emailInvalid => '请输入有效的电子邮件';
+
+  @override
+  String get passwordTooShort => '密码至少需要 6 个字符';
+
+  @override
+  String get noAccountPrompt => '第一次使用？创建一个账户';
+
+  @override
+  String get haveAccountPrompt => '已有账户？立即登录';
+
+  @override
+  String get checkEmailTitle => '请查收邮件';
+
+  @override
+  String get checkEmailMessage => '我们已发送确认链接。确认后即可登录。';
+
+  @override
+  String get authFailed => '登录失败。请检查信息后重试。';
+
+  @override
+  String get tagline => '一起完成任务。';
+
+  @override
+  String get friendCodeHint => 'ABC123';
+
+  @override
+  String get logoutMessage => '你需要重新登录才能访问任务。';
+
+  @override
+  String get genericError => '出错了，请重试。';
+
+  @override
+  String get orContinueWith => '或使用以下方式继续';
 }

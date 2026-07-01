@@ -59,5 +59,21 @@
   "priorityHigh": "Urgente",
   "priorityMedium": "Media",
   "priorityLow": "Baja",
-  "needsAttention": "Requiere atención"
+  "needsAttention": "Requiere atención",
+  "signIn": "Iniciar sesión",
+  "createAccount": "Crear cuenta",
+  "email": "Correo electrónico",
+  "password": "Contraseña",
+  "emailInvalid": "Introduce un correo válido",
+  "passwordTooShort": "La contraseña debe tener al menos 6 caracteres",
+  "noAccountPrompt": "¿Nuevo aquí? Crea una cuenta",
+  "haveAccountPrompt": "¿Ya tienes cuenta? Inicia sesión",
+  "checkEmailTitle": "Revisa tu correo",
+  "checkEmailMessage": "Te enviamos un enlace de confirmación. Confírmalo y luego inicia sesión.",
+  "authFailed": "No se pudo iniciar sesión. Revisa tus datos e inténtalo de nuevo.",
+  "tagline": "Tareas, juntos.",
+  "friendCodeHint": "ABC123",
+  "logoutMessage": "Tendrás que iniciar sesión de nuevo para acceder a tus tareas.",
+  "genericError": "Algo salió mal. Inténtalo de nuevo.",
+  "orContinueWith": "o continúa con"
 }

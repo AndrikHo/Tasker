@@ -187,4 +187,52 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get needsAttention => '주의가 필요해요';
+
+  @override
+  String get signIn => '로그인';
+
+  @override
+  String get createAccount => '계정 만들기';
+
+  @override
+  String get email => '이메일';
+
+  @override
+  String get password => '비밀번호';
+
+  @override
+  String get emailInvalid => '올바른 이메일을 입력하세요';
+
+  @override
+  String get passwordTooShort => '비밀번호는 6자 이상이어야 해요';
+
+  @override
+  String get noAccountPrompt => '처음이신가요? 계정을 만드세요';
+
+  @override
+  String get haveAccountPrompt => '이미 계정이 있나요? 로그인하세요';
+
+  @override
+  String get checkEmailTitle => '이메일을 확인하세요';
+
+  @override
+  String get checkEmailMessage => '확인 링크를 보냈어요. 확인한 뒤 로그인하세요.';
+
+  @override
+  String get authFailed => '로그인에 실패했어요. 정보를 확인하고 다시 시도하세요.';
+
+  @override
+  String get tagline => '할 일을 함께.';
+
+  @override
+  String get friendCodeHint => 'ABC123';
+
+  @override
+  String get logoutMessage => '할 일에 접근하려면 다시 로그인해야 해요.';
+
+  @override
+  String get genericError => '문제가 발생했어요. 다시 시도하세요.';
+
+  @override
+  String get orContinueWith => '또는 다음으로 계속';
 }

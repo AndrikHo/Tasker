@@ -59,5 +59,21 @@
   "priorityHigh": "Urgente",
   "priorityMedium": "Média",
   "priorityLow": "Baixa",
-  "needsAttention": "Precisa de atenção"
+  "needsAttention": "Precisa de atenção",
+  "signIn": "Entrar",
+  "createAccount": "Criar conta",
+  "email": "E-mail",
+  "password": "Senha",
+  "emailInvalid": "Insira um e-mail válido",
+  "passwordTooShort": "A senha deve ter pelo menos 6 caracteres",
+  "noAccountPrompt": "Novo por aqui? Crie uma conta",
+  "haveAccountPrompt": "Já tem conta? Entre",
+  "checkEmailTitle": "Verifique seu e-mail",
+  "checkEmailMessage": "Enviamos um link de confirmação. Confirme e depois entre.",
+  "authFailed": "Falha ao entrar. Verifique seus dados e tente novamente.",
+  "tagline": "Tarefas, juntos.",
+  "friendCodeHint": "ABC123",
+  "logoutMessage": "Você precisará entrar novamente para acessar suas tarefas.",
+  "genericError": "Algo deu errado. Tente novamente.",
+  "orContinueWith": "ou continue com"
 }

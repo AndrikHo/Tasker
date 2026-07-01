@@ -72,8 +72,9 @@ class _ListsScreenState extends ConsumerState<ListsScreen> {
     final urgent = active.where((t) => t.priority == Priority.high).toList();
     final pct = tasks.isEmpty ? 0 : (done.length / tasks.length * 100).round();
 
-    void toggle(TaskItem t) =>
-        ref.read(tasksProvider.notifier).toggle(list.id, t.id, DemoMembers.me);
+    void toggle(TaskItem t) => ref
+        .read(tasksProvider.notifier)
+        .toggle(list.id, t.id, ref.read(currentMemberProvider));
 
     return Scaffold(
       body: SafeArea(

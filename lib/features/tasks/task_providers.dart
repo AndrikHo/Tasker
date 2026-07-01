@@ -1,13 +1,19 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/providers/settings_provider.dart';
+import '../../data/auth/auth_providers.dart';
+import '../../data/repositories/repository_providers.dart';
+import '../../data/repositories/tasker_repository.dart';
 import 'task_model.dart';
 
 /// Stable identifiers for the four default lists.
 enum ListKind { personal, shared, family, work }
 
 /// A task list. Default lists carry a [nameKey] resolved to a localized label;
-/// user-created lists carry a literal [name]. Backed by Supabase later.
+/// user-created lists carry a literal [name]. Backed by Supabase when signed in.
 @immutable
 class TaskList {
   const TaskList({
@@ -32,8 +38,8 @@ class TaskList {
   bool get isDefault => nameKey != null;
 }
 
-/// Demo members (preview of the collaboration / personalization model).
-/// Replaced by real accounts once Supabase auth lands.
+/// Demo members (preview of the collaboration / personalization model used in
+/// local demo mode when no backend is configured).
 class DemoMembers {
   static const me = Member(
     id: 'me',
@@ -61,9 +67,63 @@ class DemoMembers {
   );
 }
 
-/// The set of lists. Seeded with the four defaults; users can add more.
+/// The "me" member used when completing/creating tasks. Backed by the signed-in
+/// user's profile (auth id + profile name/emoji/color) when the backend is
+/// active, otherwise the local demo identity.
+final currentMemberProvider = Provider<Member>((ref) {
+  final repo = ref.watch(taskerRepositoryProvider);
+  if (repo == null) return DemoMembers.me;
+  final user = ref.watch(currentUserProvider);
+  final profile = ref.watch(profileProvider);
+  return Member(
+    id: user?.id ?? 'me',
+    name: profile.name ?? 'You',
+    color: profile.color,
+    emoji: profile.emoji,
+  );
+});
+
+/// The set of lists. In local mode seeded with the four defaults (users can add
+/// more). When the backend is active it mirrors the realtime `watchLists`
+/// stream and writes go through the repository.
 class ListsNotifier extends StateNotifier<List<TaskList>> {
-  ListsNotifier() : super(_seed());
+  ListsNotifier(this._ref) : super(_seed()) {
+    _bind();
+  }
+
+  final Ref _ref;
+  StreamSubscription<List<TaskList>>? _sub;
+  TaskerRepository? _repo;
+
+  void _bind() {
+    // Re-evaluate the repository on every auth change so we flip between local
+    // and backend modes (and re-subscribe for a freshly signed-in user).
+    _ref.listen<TaskerRepository?>(taskerRepositoryProvider, (_, next) {
+      _attach(next);
+    });
+    _attach(_ref.read(taskerRepositoryProvider));
+  }
+
+  void _attach(TaskerRepository? repo) {
+    _repo = repo;
+    _sub?.cancel();
+    _sub = null;
+    if (repo == null) {
+      // Local demo mode: restore the seeded defaults.
+      state = _seed();
+      return;
+    }
+    // Backend mode: start empty, then mirror the realtime stream.
+    state = const [];
+    _sub = repo.watchLists().listen(
+      (lists) {
+        if (mounted) state = lists;
+      },
+      onError: (_) {
+        // Keep whatever we have on a transient stream error; realtime recovers.
+      },
+    );
+  }
 
   static List<TaskList> _seed() => const [
         TaskList(
@@ -92,27 +152,132 @@ class ListsNotifier extends StateNotifier<List<TaskList>> {
         ),
       ];
 
-  /// Adds a user-created list and returns its id.
+  /// Adds a user-created list and returns its id. In local mode the list is
+  /// appended immediately; when backed it is created server-side and the
+  /// realtime stream reflects it (an optimistic placeholder id is returned).
   String add({required String name, required Color color, required IconData icon}) {
     final id = 'list_${DateTime.now().microsecondsSinceEpoch}';
-    state = [...state, TaskList(id: id, name: name, color: color, icon: icon)];
+    final repo = _repo;
+    if (repo == null) {
+      state = [...state, TaskList(id: id, name: name, color: color, icon: icon)];
+      return id;
+    }
+    unawaited(
+      repo
+          .createList(
+            name: name,
+            colorValue: color.toARGB32(),
+            iconCodePoint: icon.codePoint,
+            iconFontFamily: icon.fontFamily,
+          )
+          .catchError((_) => ''),
+    );
     return id;
   }
 
-  void reset() => state = _seed();
+  /// Resets to the seeded defaults (local mode only; backend resets happen via
+  /// the repository's data-deletion path).
+  void reset() {
+    if (_repo == null) state = _seed();
+  }
+
+  @override
+  void dispose() {
+    _sub?.cancel();
+    super.dispose();
+  }
 }
 
 final listsProvider =
     StateNotifierProvider<ListsNotifier, List<TaskList>>((ref) {
-  return ListsNotifier();
+  return ListsNotifier(ref);
 });
 
-/// In-memory task store keyed by list id. Seeded with sample data so the UI
-/// reads as a real app during design. Swapped for Supabase-backed state next.
+/// Task store keyed by list id. In local mode it is seeded in-memory. When the
+/// backend is active each known list gets its own realtime `watchTasks`
+/// subscription; their results are merged into the map and writes go through
+/// the repository.
 class TasksNotifier extends StateNotifier<Map<String, List<TaskItem>>> {
-  TasksNotifier() : super(_seed());
+  TasksNotifier(this._ref) : super(_seed()) {
+    _bind();
+  }
+
+  final Ref _ref;
+  TaskerRepository? _repo;
+  final Map<String, StreamSubscription<List<TaskItem>>> _subs = {};
+
+  void _bind() {
+    _ref.listen<TaskerRepository?>(taskerRepositoryProvider, (_, next) {
+      _attachRepo(next);
+    });
+    // Re-subscribe whenever the set of lists changes (new/removed lists).
+    _ref.listen<List<TaskList>>(listsProvider, (_, lists) {
+      _syncSubscriptions(lists.map((l) => l.id).toSet());
+    });
+    _attachRepo(_ref.read(taskerRepositoryProvider));
+  }
+
+  void _attachRepo(TaskerRepository? repo) {
+    _repo = repo;
+    _cancelAll();
+    if (repo == null) {
+      state = _seed();
+      return;
+    }
+    state = {};
+    // Subscribe to whatever lists are already known; the listsProvider listener
+    // keeps this in sync as lists arrive from realtime.
+    _syncSubscriptions(_ref.read(listsProvider).map((l) => l.id).toSet());
+  }
+
+  void _syncSubscriptions(Set<String> listIds) {
+    final repo = _repo;
+    if (repo == null) return;
+    // Drop subscriptions / state for lists that no longer exist.
+    for (final id in _subs.keys.toList()) {
+      if (!listIds.contains(id)) {
+        _subs.remove(id)?.cancel();
+        if (state.containsKey(id)) {
+          final next = {...state}..remove(id);
+          state = next;
+        }
+      }
+    }
+    // Open a subscription for each new list.
+    for (final id in listIds) {
+      if (_subs.containsKey(id)) continue;
+      _subs[id] = repo.watchTasks(id).listen(
+        (tasks) {
+          if (mounted) state = {...state, id: tasks};
+        },
+        onError: (_) {/* keep last good state on transient errors */},
+      );
+    }
+  }
+
+  void _cancelAll() {
+    for (final sub in _subs.values) {
+      sub.cancel();
+    }
+    _subs.clear();
+  }
 
   void toggle(String listId, String taskId, Member by) {
+    final repo = _repo;
+    if (repo != null) {
+      final items = state[listId];
+      final current = items?.firstWhere(
+        (t) => t.id == taskId,
+        orElse: () => const TaskItem(id: '', title: ''),
+      );
+      final nextDone = !(current?.done ?? false);
+      unawaited(
+        repo
+            .setTaskDone(taskId, done: nextDone, byMemberId: by.id)
+            .catchError((_) {}),
+      );
+      return;
+    }
     final items = [...?state[listId]];
     final i = items.indexWhere((t) => t.id == taskId);
     if (i == -1) return;
@@ -123,12 +288,22 @@ class TasksNotifier extends StateNotifier<Map<String, List<TaskItem>>> {
 
   /// Adds a task to [listId], newest first.
   void add(String listId, TaskItem task) {
+    final repo = _repo;
+    if (repo != null) {
+      unawaited(repo.createTask(listId, task).catchError((_) => ''));
+      return;
+    }
     final items = [task, ...?state[listId]];
     state = {...state, listId: items};
   }
 
   /// Sets a task's [priority].
   void setPriority(String listId, String taskId, Priority priority) {
+    final repo = _repo;
+    if (repo != null) {
+      unawaited(repo.setTaskPriority(taskId, priority).catchError((_) {}));
+      return;
+    }
     final items = [...?state[listId]];
     final i = items.indexWhere((t) => t.id == taskId);
     if (i == -1) return;
@@ -136,8 +311,14 @@ class TasksNotifier extends StateNotifier<Map<String, List<TaskItem>>> {
     state = {...state, listId: items};
   }
 
-  /// Wipes all task data back to an empty store (used by "delete data").
+  /// Wipes all task data. In local mode resets the store to empty lists; when
+  /// backed, deletes the user's data server-side (realtime clears the state).
   void clearAll() {
+    final repo = _repo;
+    if (repo != null) {
+      unawaited(repo.deleteAllData().catchError((_) {}));
+      return;
+    }
     state = {for (final entry in state.entries) entry.key: const <TaskItem>[]};
   }
 
@@ -191,21 +372,56 @@ class TasksNotifier extends StateNotifier<Map<String, List<TaskItem>>> {
       'work': [],
     };
   }
+
+  @override
+  void dispose() {
+    _cancelAll();
+    super.dispose();
+  }
 }
 
 final tasksProvider =
     StateNotifierProvider<TasksNotifier, Map<String, List<TaskItem>>>(
-  (ref) => TasksNotifier(),
+  (ref) => TasksNotifier(ref),
 );
 
-/// The user's friends. Seeded with the demo cast; users can add by id.
+/// The user's friends. In local mode seeded with the demo cast; when the
+/// backend is active it is hydrated from the repository and mutated through it.
 class FriendsNotifier extends StateNotifier<List<Member>> {
-  FriendsNotifier()
-      : super(const [
-          DemoMembers.wife,
-          DemoMembers.son,
-          DemoMembers.coworker,
-        ]);
+  FriendsNotifier(this._ref) : super(_localSeed()) {
+    _bind();
+  }
+
+  final Ref _ref;
+  TaskerRepository? _repo;
+
+  void _bind() {
+    _ref.listen<TaskerRepository?>(taskerRepositoryProvider, (_, next) {
+      _attach(next);
+    });
+    _attach(_ref.read(taskerRepositoryProvider));
+  }
+
+  void _attach(TaskerRepository? repo) {
+    _repo = repo;
+    if (repo == null) {
+      state = _localSeed();
+      return;
+    }
+    state = const [];
+    _refresh();
+  }
+
+  Future<void> _refresh() async {
+    final repo = _repo;
+    if (repo == null) return;
+    try {
+      final friends = await repo.fetchFriends();
+      if (mounted && _repo == repo) state = friends;
+    } catch (_) {
+      // Leave state as-is; the user can retry by reopening the screen.
+    }
+  }
 
   static const _palette = <Color>[
     Color(0xFF22D3EE),
@@ -217,31 +433,58 @@ class FriendsNotifier extends StateNotifier<List<Member>> {
   ];
   static const _emojis = <String>['🙂', '😎', '🚀', '🌟', '🐱', '🎧'];
 
-  /// Adds a friend referenced by account id (`#<id>`). Color/emoji are derived
-  /// deterministically until real profiles arrive from the backend.
-  void addById(String accountId) {
+  static List<Member> _localSeed() => const [
+        DemoMembers.wife,
+        DemoMembers.son,
+        DemoMembers.coworker,
+      ];
+
+  /// Adds a friend referenced by friend code / handle (entered as `#XXXXXX`).
+  /// In local mode a placeholder member is appended; when backed the friendship
+  /// is created by handle and the list is refreshed.
+  void addById(String handle) {
+    final repo = _repo;
+    if (repo != null) {
+      unawaited(_addByHandleBacked(handle));
+      return;
+    }
     final n = state.length;
     final m = Member(
-      id: 'friend_$accountId',
-      name: '#$accountId',
+      id: 'friend_$handle',
+      name: '#$handle',
       color: _palette[n % _palette.length],
       emoji: _emojis[n % _emojis.length],
     );
     state = [...state, m];
   }
 
+  Future<void> _addByHandleBacked(String handle) async {
+    final repo = _repo;
+    if (repo == null) return;
+    try {
+      await repo.addFriendByHandle(handle);
+    } finally {
+      await _refresh();
+    }
+  }
+
   void remove(String id) {
+    final repo = _repo;
+    if (repo != null) {
+      unawaited(
+        repo.removeFriend(id).whenComplete(_refresh).catchError((_) {}),
+      );
+      return;
+    }
     state = state.where((m) => m.id != id).toList();
   }
 
-  void reset() => state = const [
-        DemoMembers.wife,
-        DemoMembers.son,
-        DemoMembers.coworker,
-      ];
+  void reset() {
+    if (_repo == null) state = _localSeed();
+  }
 }
 
 final friendsProvider =
     StateNotifierProvider<FriendsNotifier, List<Member>>((ref) {
-  return FriendsNotifier();
+  return FriendsNotifier(ref);
 });

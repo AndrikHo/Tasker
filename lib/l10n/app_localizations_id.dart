@@ -188,4 +188,54 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get needsAttention => 'Perlu perhatian';
+
+  @override
+  String get signIn => 'Masuk';
+
+  @override
+  String get createAccount => 'Buat akun';
+
+  @override
+  String get email => 'Email';
+
+  @override
+  String get password => 'Kata sandi';
+
+  @override
+  String get emailInvalid => 'Masukkan email yang valid';
+
+  @override
+  String get passwordTooShort => 'Kata sandi harus minimal 6 karakter';
+
+  @override
+  String get noAccountPrompt => 'Baru di sini? Buat akun';
+
+  @override
+  String get haveAccountPrompt => 'Sudah punya akun? Masuk';
+
+  @override
+  String get checkEmailTitle => 'Periksa email Anda';
+
+  @override
+  String get checkEmailMessage =>
+      'Kami mengirim tautan konfirmasi. Konfirmasikan, lalu masuk.';
+
+  @override
+  String get authFailed => 'Gagal masuk. Periksa data Anda dan coba lagi.';
+
+  @override
+  String get tagline => 'Tugas, bersama.';
+
+  @override
+  String get friendCodeHint => 'ABC123';
+
+  @override
+  String get logoutMessage =>
+      'Anda perlu masuk lagi untuk mengakses tugas Anda.';
+
+  @override
+  String get genericError => 'Terjadi kesalahan. Coba lagi.';
+
+  @override
+  String get orContinueWith => 'atau lanjutkan dengan';
 }

@@ -59,5 +59,21 @@
   "priorityHigh": "अत्यावश्यक",
   "priorityMedium": "मध्यम",
   "priorityLow": "कम",
-  "needsAttention": "ध्यान देने की ज़रूरत"
+  "needsAttention": "ध्यान देने की ज़रूरत",
+  "signIn": "साइन इन करें",
+  "createAccount": "खाता बनाएँ",
+  "email": "ईमेल",
+  "password": "पासवर्ड",
+  "emailInvalid": "मान्य ईमेल दर्ज करें",
+  "passwordTooShort": "पासवर्ड कम से कम 6 अक्षरों का होना चाहिए",
+  "noAccountPrompt": "नए हैं? खाता बनाएँ",
+  "haveAccountPrompt": "पहले से खाता है? साइन इन करें",
+  "checkEmailTitle": "अपना ईमेल देखें",
+  "checkEmailMessage": "हमने पुष्टि लिंक भेजा है. उसकी पुष्टि करें, फिर साइन इन करें.",
+  "authFailed": "साइन इन विफल रहा. अपनी जानकारी जाँचें और पुनः प्रयास करें.",
+  "tagline": "काम, साथ मिलकर.",
+  "friendCodeHint": "ABC123",
+  "logoutMessage": "अपने कार्यों तक पहुँचने के लिए आपको फिर से साइन इन करना होगा.",
+  "genericError": "कुछ गलत हो गया. पुनः प्रयास करें.",
+  "orContinueWith": "या इसके साथ जारी रखें"
 }

@@ -188,4 +188,55 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get needsAttention => 'ध्यान देने की ज़रूरत';
+
+  @override
+  String get signIn => 'साइन इन करें';
+
+  @override
+  String get createAccount => 'खाता बनाएँ';
+
+  @override
+  String get email => 'ईमेल';
+
+  @override
+  String get password => 'पासवर्ड';
+
+  @override
+  String get emailInvalid => 'मान्य ईमेल दर्ज करें';
+
+  @override
+  String get passwordTooShort => 'पासवर्ड कम से कम 6 अक्षरों का होना चाहिए';
+
+  @override
+  String get noAccountPrompt => 'नए हैं? खाता बनाएँ';
+
+  @override
+  String get haveAccountPrompt => 'पहले से खाता है? साइन इन करें';
+
+  @override
+  String get checkEmailTitle => 'अपना ईमेल देखें';
+
+  @override
+  String get checkEmailMessage =>
+      'हमने पुष्टि लिंक भेजा है. उसकी पुष्टि करें, फिर साइन इन करें.';
+
+  @override
+  String get authFailed =>
+      'साइन इन विफल रहा. अपनी जानकारी जाँचें और पुनः प्रयास करें.';
+
+  @override
+  String get tagline => 'काम, साथ मिलकर.';
+
+  @override
+  String get friendCodeHint => 'ABC123';
+
+  @override
+  String get logoutMessage =>
+      'अपने कार्यों तक पहुँचने के लिए आपको फिर से साइन इन करना होगा.';
+
+  @override
+  String get genericError => 'कुछ गलत हो गया. पुनः प्रयास करें.';
+
+  @override
+  String get orContinueWith => 'या इसके साथ जारी रखें';
 }

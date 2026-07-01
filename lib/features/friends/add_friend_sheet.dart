@@ -40,12 +40,12 @@ class _AddFriendSheetState extends ConsumerState<_AddFriendSheet> {
   }
 
   void _add() {
-    final id = _controller.text.trim().replaceAll('#', '');
-    if (id.isEmpty) {
+    final code = _controller.text.trim().replaceAll('#', '').toUpperCase();
+    if (code.isEmpty) {
       Navigator.pop(context);
       return;
     }
-    ref.read(friendsProvider.notifier).addById(id);
+    ref.read(friendsProvider.notifier).addById(code);
     Navigator.pop(context);
   }
 
@@ -76,11 +76,11 @@ class _AddFriendSheetState extends ConsumerState<_AddFriendSheet> {
                   child: TextField(
                     controller: _controller,
                     autofocus: true,
-                    keyboardType: TextInputType.number,
+                    textCapitalization: TextCapitalization.characters,
                     textInputAction: TextInputAction.done,
                     onSubmitted: (_) => _add(),
                     decoration: InputDecoration(
-                      hintText: '#0',
+                      hintText: l10n.friendCodeHint,
                       prefixText: '#',
                       filled: true,
                       border: OutlineInputBorder(

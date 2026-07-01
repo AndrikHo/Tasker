@@ -59,5 +59,21 @@
   "priorityHigh": "Urgent",
   "priorityMedium": "Moyenne",
   "priorityLow": "Faible",
-  "needsAttention": "À traiter"
+  "needsAttention": "À traiter",
+  "signIn": "Se connecter",
+  "createAccount": "Créer un compte",
+  "email": "E-mail",
+  "password": "Mot de passe",
+  "emailInvalid": "Saisissez une adresse e-mail valide",
+  "passwordTooShort": "Le mot de passe doit comporter au moins 6 caractères",
+  "noAccountPrompt": "Nouveau ? Créez un compte",
+  "haveAccountPrompt": "Vous avez un compte ? Connectez-vous",
+  "checkEmailTitle": "Vérifiez vos e-mails",
+  "checkEmailMessage": "Nous avons envoyé un lien de confirmation. Confirmez-le, puis connectez-vous.",
+  "authFailed": "Échec de la connexion. Vérifiez vos informations et réessayez.",
+  "tagline": "Les tâches, ensemble.",
+  "friendCodeHint": "ABC123",
+  "logoutMessage": "Vous devrez vous reconnecter pour accéder à vos tâches.",
+  "genericError": "Une erreur est survenue. Réessayez.",
+  "orContinueWith": "ou continuer avec"
 }

@@ -188,4 +188,55 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get needsAttention => 'Braucht Aufmerksamkeit';
+
+  @override
+  String get signIn => 'Anmelden';
+
+  @override
+  String get createAccount => 'Konto erstellen';
+
+  @override
+  String get email => 'E-Mail';
+
+  @override
+  String get password => 'Passwort';
+
+  @override
+  String get emailInvalid => 'Gib eine gültige E-Mail ein';
+
+  @override
+  String get passwordTooShort => 'Das Passwort muss mindestens 6 Zeichen haben';
+
+  @override
+  String get noAccountPrompt => 'Neu hier? Konto erstellen';
+
+  @override
+  String get haveAccountPrompt => 'Schon ein Konto? Anmelden';
+
+  @override
+  String get checkEmailTitle => 'Prüfe deine E-Mails';
+
+  @override
+  String get checkEmailMessage =>
+      'Wir haben einen Bestätigungslink gesendet. Bestätige ihn und melde dich dann an.';
+
+  @override
+  String get authFailed =>
+      'Anmeldung fehlgeschlagen. Prüfe deine Angaben und versuch es erneut.';
+
+  @override
+  String get tagline => 'Aufgaben, gemeinsam.';
+
+  @override
+  String get friendCodeHint => 'ABC123';
+
+  @override
+  String get logoutMessage =>
+      'Du musst dich erneut anmelden, um auf deine Aufgaben zuzugreifen.';
+
+  @override
+  String get genericError => 'Etwas ist schiefgelaufen. Versuch es erneut.';
+
+  @override
+  String get orContinueWith => 'oder weiter mit';
 }

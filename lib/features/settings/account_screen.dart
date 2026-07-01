@@ -7,6 +7,8 @@ import '../../core/widgets/bento.dart';
 import '../../core/widgets/feedback.dart';
 import '../../core/widgets/settings_tile.dart';
 import '../../core/widgets/surface_card.dart';
+import '../../data/auth/auth_providers.dart';
+import '../../data/repositories/repository_providers.dart';
 import '../../l10n/app_localizations.dart';
 import '../characters/character.dart';
 import '../characters/character_art.dart';
@@ -123,13 +125,15 @@ class AccountScreen extends ConsumerWidget {
           const SizedBox(height: kBentoGap),
           _Group(
             children: [
-              SettingsTile(
-                icon: Icons.logout,
-                title: l10n.logout,
-                showChevron: false,
-                onTap: () => showComingSoon(context, l10n.signInRequired),
-              ),
-              _GroupDivider(),
+              if (ref.watch(backendConfiguredProvider)) ...[
+                SettingsTile(
+                  icon: Icons.logout,
+                  title: l10n.logout,
+                  showChevron: false,
+                  onTap: () => _confirmLogout(context, ref),
+                ),
+                _GroupDivider(),
+              ],
               SettingsTile(
                 icon: Icons.delete_sweep_outlined,
                 title: l10n.deleteData,
@@ -183,6 +187,16 @@ class AccountScreen extends ConsumerWidget {
     controller.dispose();
     if (name != null) {
       await ref.read(profileProvider.notifier).setName(name);
+      // Mirror the display name to the backend profile when signed in.
+      final repo = ref.read(taskerRepositoryProvider);
+      if (repo != null) {
+        final updated = ref.read(profileProvider);
+        try {
+          await repo.updateMyProfile(updated);
+        } catch (_) {
+          // Local change still applies; surfaced on next profile sync.
+        }
+      }
     }
   }
 
@@ -204,11 +218,31 @@ class AccountScreen extends ConsumerWidget {
       confirmLabel: l10n.delete,
     );
     if (ok != true || !context.mounted) return;
+    final repo = ref.read(taskerRepositoryProvider);
+    // clearAll() routes to the backend when signed in, else clears local state.
     ref.read(tasksProvider.notifier).clearAll();
-    ref.read(listsProvider.notifier).reset();
-    ref.read(friendsProvider.notifier).reset();
-    await ref.read(profileProvider.notifier).clear();
+    if (repo == null) {
+      ref.read(listsProvider.notifier).reset();
+      ref.read(friendsProvider.notifier).reset();
+      await ref.read(profileProvider.notifier).clear();
+    }
     if (context.mounted) showComingSoon(context, l10n.dataDeleted);
+  }
+
+  Future<void> _confirmLogout(BuildContext context, WidgetRef ref) async {
+    final l10n = AppLocalizations.of(context);
+    final ok = await _confirm(
+      context,
+      title: l10n.logout,
+      message: l10n.logoutMessage,
+      confirmLabel: l10n.logout,
+    );
+    if (ok != true) return;
+    try {
+      await ref.read(authServiceProvider).signOut();
+    } catch (_) {
+      // Sign-out failures are non-fatal; the auth gate reacts to state.
+    }
   }
 
   Future<void> _confirmDeleteAccount(
@@ -220,8 +254,17 @@ class AccountScreen extends ConsumerWidget {
       message: l10n.deleteAccountMessage,
       confirmLabel: l10n.delete,
     );
-    if (ok == true && context.mounted) {
-      showComingSoon(context, l10n.signInRequired);
+    if (ok != true) return;
+    final repo = ref.read(taskerRepositoryProvider);
+    if (repo == null) {
+      if (context.mounted) showComingSoon(context, l10n.signInRequired);
+      return;
+    }
+    try {
+      await repo.deleteAccount();
+      await ref.read(authServiceProvider).signOut();
+    } catch (_) {
+      if (context.mounted) showComingSoon(context, l10n.genericError);
     }
   }
 

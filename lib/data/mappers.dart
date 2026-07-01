@@ -4,11 +4,11 @@ import '../core/providers/settings_provider.dart';
 import '../features/tasks/task_model.dart';
 import '../features/tasks/task_providers.dart';
 
-/// Converts Supabase rows (`Map<String, dynamic>`) into the app's domain
+/// Converts backend JSON rows (`Map<String, dynamic>`) into the app's domain
 /// models, and domain models back into row payloads for writes.
 ///
-/// Kept in one place so the column contract lives next to the migration, not
-/// scattered across the data layer.
+/// Kept in one place so the snake_case column contract (shared with the backend
+/// schema) lives in a single spot, not scattered across the data layer.
 class Mappers {
   const Mappers._();
 

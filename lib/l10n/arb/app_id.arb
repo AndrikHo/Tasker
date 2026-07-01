@@ -59,5 +59,21 @@
   "priorityHigh": "Mendesak",
   "priorityMedium": "Sedang",
   "priorityLow": "Rendah",
-  "needsAttention": "Perlu perhatian"
+  "needsAttention": "Perlu perhatian",
+  "signIn": "Masuk",
+  "createAccount": "Buat akun",
+  "email": "Email",
+  "password": "Kata sandi",
+  "emailInvalid": "Masukkan email yang valid",
+  "passwordTooShort": "Kata sandi harus minimal 6 karakter",
+  "noAccountPrompt": "Baru di sini? Buat akun",
+  "haveAccountPrompt": "Sudah punya akun? Masuk",
+  "checkEmailTitle": "Periksa email Anda",
+  "checkEmailMessage": "Kami mengirim tautan konfirmasi. Konfirmasikan, lalu masuk.",
+  "authFailed": "Gagal masuk. Periksa data Anda dan coba lagi.",
+  "tagline": "Tugas, bersama.",
+  "friendCodeHint": "ABC123",
+  "logoutMessage": "Anda perlu masuk lagi untuk mengakses tugas Anda.",
+  "genericError": "Terjadi kesalahan. Coba lagi.",
+  "orContinueWith": "atau lanjutkan dengan"
 }

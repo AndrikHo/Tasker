@@ -21,8 +21,10 @@ dependencies:
   # Navigation
   go_router: ^14.2.0
 
-  # Backend (Supabase) - data layer
-  supabase_flutter: ^2.5.6
+  # Backend (self-hosted REST + realtime) - data layer
+  http: ^1.2.2
+  web_socket_channel: ^3.0.1
+  flutter_secure_storage: ^9.2.2
 
   # i18n
   intl: any

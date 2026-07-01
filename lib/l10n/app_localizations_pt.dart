@@ -188,4 +188,55 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get needsAttention => 'Precisa de atenção';
+
+  @override
+  String get signIn => 'Entrar';
+
+  @override
+  String get createAccount => 'Criar conta';
+
+  @override
+  String get email => 'E-mail';
+
+  @override
+  String get password => 'Senha';
+
+  @override
+  String get emailInvalid => 'Insira um e-mail válido';
+
+  @override
+  String get passwordTooShort => 'A senha deve ter pelo menos 6 caracteres';
+
+  @override
+  String get noAccountPrompt => 'Novo por aqui? Crie uma conta';
+
+  @override
+  String get haveAccountPrompt => 'Já tem conta? Entre';
+
+  @override
+  String get checkEmailTitle => 'Verifique seu e-mail';
+
+  @override
+  String get checkEmailMessage =>
+      'Enviamos um link de confirmação. Confirme e depois entre.';
+
+  @override
+  String get authFailed =>
+      'Falha ao entrar. Verifique seus dados e tente novamente.';
+
+  @override
+  String get tagline => 'Tarefas, juntos.';
+
+  @override
+  String get friendCodeHint => 'ABC123';
+
+  @override
+  String get logoutMessage =>
+      'Você precisará entrar novamente para acessar suas tarefas.';
+
+  @override
+  String get genericError => 'Algo deu errado. Tente novamente.';
+
+  @override
+  String get orContinueWith => 'ou continue com';
 }

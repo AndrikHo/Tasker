@@ -59,5 +59,21 @@
   "priorityHigh": "Dringend",
   "priorityMedium": "Mittel",
   "priorityLow": "Niedrig",
-  "needsAttention": "Braucht Aufmerksamkeit"
+  "needsAttention": "Braucht Aufmerksamkeit",
+  "signIn": "Anmelden",
+  "createAccount": "Konto erstellen",
+  "email": "E-Mail",
+  "password": "Passwort",
+  "emailInvalid": "Gib eine gültige E-Mail ein",
+  "passwordTooShort": "Das Passwort muss mindestens 6 Zeichen haben",
+  "noAccountPrompt": "Neu hier? Konto erstellen",
+  "haveAccountPrompt": "Schon ein Konto? Anmelden",
+  "checkEmailTitle": "Prüfe deine E-Mails",
+  "checkEmailMessage": "Wir haben einen Bestätigungslink gesendet. Bestätige ihn und melde dich dann an.",
+  "authFailed": "Anmeldung fehlgeschlagen. Prüfe deine Angaben und versuch es erneut.",
+  "tagline": "Aufgaben, gemeinsam.",
+  "friendCodeHint": "ABC123",
+  "logoutMessage": "Du musst dich erneut anmelden, um auf deine Aufgaben zuzugreifen.",
+  "genericError": "Etwas ist schiefgelaufen. Versuch es erneut.",
+  "orContinueWith": "oder weiter mit"
 }

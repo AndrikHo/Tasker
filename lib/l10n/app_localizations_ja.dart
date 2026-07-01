@@ -187,4 +187,52 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get needsAttention => '要対応';
+
+  @override
+  String get signIn => 'ログイン';
+
+  @override
+  String get createAccount => 'アカウント作成';
+
+  @override
+  String get email => 'メール';
+
+  @override
+  String get password => 'パスワード';
+
+  @override
+  String get emailInvalid => '有効なメールアドレスを入力してください';
+
+  @override
+  String get passwordTooShort => 'パスワードは6文字以上にしてください';
+
+  @override
+  String get noAccountPrompt => 'はじめてですか？アカウントを作成';
+
+  @override
+  String get haveAccountPrompt => 'アカウントをお持ちですか？ログイン';
+
+  @override
+  String get checkEmailTitle => 'メールを確認してください';
+
+  @override
+  String get checkEmailMessage => '確認リンクを送信しました。確認後にログインしてください。';
+
+  @override
+  String get authFailed => 'ログインに失敗しました。情報を確認して再試行してください。';
+
+  @override
+  String get tagline => 'タスクを、みんなで。';
+
+  @override
+  String get friendCodeHint => 'ABC123';
+
+  @override
+  String get logoutMessage => 'タスクにアクセスするには再度ログインが必要です。';
+
+  @override
+  String get genericError => '問題が発生しました。再試行してください。';
+
+  @override
+  String get orContinueWith => 'または次で続行';
 }

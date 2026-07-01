@@ -188,4 +188,53 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get needsAttention => 'يحتاج إلى انتباه';
+
+  @override
+  String get signIn => 'تسجيل الدخول';
+
+  @override
+  String get createAccount => 'إنشاء حساب';
+
+  @override
+  String get email => 'البريد الإلكتروني';
+
+  @override
+  String get password => 'كلمة المرور';
+
+  @override
+  String get emailInvalid => 'أدخل بريدًا إلكترونيًا صالحًا';
+
+  @override
+  String get passwordTooShort => 'يجب أن تتكون كلمة المرور من 6 أحرف على الأقل';
+
+  @override
+  String get noAccountPrompt => 'جديد هنا؟ أنشئ حسابًا';
+
+  @override
+  String get haveAccountPrompt => 'لديك حساب؟ سجّل الدخول';
+
+  @override
+  String get checkEmailTitle => 'تحقّق من بريدك';
+
+  @override
+  String get checkEmailMessage => 'أرسلنا رابط تأكيد. أكّده ثم سجّل الدخول.';
+
+  @override
+  String get authFailed => 'فشل تسجيل الدخول. تحقّق من بياناتك وحاول مرة أخرى.';
+
+  @override
+  String get tagline => 'المهام، معًا.';
+
+  @override
+  String get friendCodeHint => 'ABC123';
+
+  @override
+  String get logoutMessage =>
+      'ستحتاج إلى تسجيل الدخول مرة أخرى للوصول إلى مهامك.';
+
+  @override
+  String get genericError => 'حدث خطأ ما. حاول مرة أخرى.';
+
+  @override
+  String get orContinueWith => 'أو تابع باستخدام';
 }

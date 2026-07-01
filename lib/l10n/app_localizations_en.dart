@@ -188,4 +188,54 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get needsAttention => 'Needs attention';
+
+  @override
+  String get signIn => 'Sign in';
+
+  @override
+  String get createAccount => 'Create account';
+
+  @override
+  String get email => 'Email';
+
+  @override
+  String get password => 'Password';
+
+  @override
+  String get emailInvalid => 'Enter a valid email';
+
+  @override
+  String get passwordTooShort => 'Password must be at least 6 characters';
+
+  @override
+  String get noAccountPrompt => 'New here? Create an account';
+
+  @override
+  String get haveAccountPrompt => 'Have an account? Sign in';
+
+  @override
+  String get checkEmailTitle => 'Check your email';
+
+  @override
+  String get checkEmailMessage =>
+      'We sent a confirmation link. Confirm it, then sign in.';
+
+  @override
+  String get authFailed => 'Sign in failed. Check your details and try again.';
+
+  @override
+  String get tagline => 'Tasks, together.';
+
+  @override
+  String get friendCodeHint => 'ABC123';
+
+  @override
+  String get logoutMessage =>
+      'You will need to sign in again to access your tasks.';
+
+  @override
+  String get genericError => 'Something went wrong. Try again.';
+
+  @override
+  String get orContinueWith => 'or continue with';
 }

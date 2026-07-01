@@ -59,5 +59,21 @@
   "priorityHigh": "عاجل",
   "priorityMedium": "متوسط",
   "priorityLow": "منخفض",
-  "needsAttention": "يحتاج إلى انتباه"
+  "needsAttention": "يحتاج إلى انتباه",
+  "signIn": "تسجيل الدخول",
+  "createAccount": "إنشاء حساب",
+  "email": "البريد الإلكتروني",
+  "password": "كلمة المرور",
+  "emailInvalid": "أدخل بريدًا إلكترونيًا صالحًا",
+  "passwordTooShort": "يجب أن تتكون كلمة المرور من 6 أحرف على الأقل",
+  "noAccountPrompt": "جديد هنا؟ أنشئ حسابًا",
+  "haveAccountPrompt": "لديك حساب؟ سجّل الدخول",
+  "checkEmailTitle": "تحقّق من بريدك",
+  "checkEmailMessage": "أرسلنا رابط تأكيد. أكّده ثم سجّل الدخول.",
+  "authFailed": "فشل تسجيل الدخول. تحقّق من بياناتك وحاول مرة أخرى.",
+  "tagline": "المهام، معًا.",
+  "friendCodeHint": "ABC123",
+  "logoutMessage": "ستحتاج إلى تسجيل الدخول مرة أخرى للوصول إلى مهامك.",
+  "genericError": "حدث خطأ ما. حاول مرة أخرى.",
+  "orContinueWith": "أو تابع باستخدام"
 }

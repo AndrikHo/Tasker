@@ -188,4 +188,54 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get needsAttention => 'Требует внимания';
+
+  @override
+  String get signIn => 'Войти';
+
+  @override
+  String get createAccount => 'Создать аккаунт';
+
+  @override
+  String get email => 'Эл. почта';
+
+  @override
+  String get password => 'Пароль';
+
+  @override
+  String get emailInvalid => 'Введите корректный адрес почты';
+
+  @override
+  String get passwordTooShort => 'Пароль должен быть не короче 6 символов';
+
+  @override
+  String get noAccountPrompt => 'Впервые здесь? Создайте аккаунт';
+
+  @override
+  String get haveAccountPrompt => 'Уже есть аккаунт? Войдите';
+
+  @override
+  String get checkEmailTitle => 'Проверьте почту';
+
+  @override
+  String get checkEmailMessage =>
+      'Мы отправили ссылку для подтверждения. Подтвердите её и войдите.';
+
+  @override
+  String get authFailed =>
+      'Не удалось войти. Проверьте данные и попробуйте снова.';
+
+  @override
+  String get tagline => 'Задачи вместе.';
+
+  @override
+  String get friendCodeHint => 'ABC123';
+
+  @override
+  String get logoutMessage => 'Чтобы вернуться к задачам, нужно войти снова.';
+
+  @override
+  String get genericError => 'Что-то пошло не так. Попробуйте снова.';
+
+  @override
+  String get orContinueWith => 'или войти через';
 }

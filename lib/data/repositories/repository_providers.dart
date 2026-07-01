@@ -1,8 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../auth/auth_providers.dart';
-import '../supabase/supabase_config.dart';
-import 'supabase_tasker_repository.dart';
+import 'backend_tasker_repository.dart';
 import 'tasker_repository.dart';
 
 /// The active repository, or null when the app is running in local demo mode
@@ -13,7 +12,10 @@ import 'tasker_repository.dart';
 /// they keep using the local in-memory providers.
 final taskerRepositoryProvider = Provider<TaskerRepository?>((ref) {
   ref.watch(authStateProvider);
-  if (!SupabaseConfig.isConfigured) return null;
-  if (SupabaseConfig.client.auth.currentUser == null) return null;
-  return SupabaseTaskerRepository(SupabaseConfig.client);
+  if (!ref.watch(backendConfiguredProvider)) return null;
+  if (!ref.watch(isSignedInProvider)) return null;
+  return BackendTaskerRepository(
+    ref.watch(apiClientProvider),
+    ref.watch(realtimeClientProvider),
+  );
 });

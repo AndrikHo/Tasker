@@ -189,4 +189,56 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get needsAttention => 'À traiter';
+
+  @override
+  String get signIn => 'Se connecter';
+
+  @override
+  String get createAccount => 'Créer un compte';
+
+  @override
+  String get email => 'E-mail';
+
+  @override
+  String get password => 'Mot de passe';
+
+  @override
+  String get emailInvalid => 'Saisissez une adresse e-mail valide';
+
+  @override
+  String get passwordTooShort =>
+      'Le mot de passe doit comporter au moins 6 caractères';
+
+  @override
+  String get noAccountPrompt => 'Nouveau ? Créez un compte';
+
+  @override
+  String get haveAccountPrompt => 'Vous avez un compte ? Connectez-vous';
+
+  @override
+  String get checkEmailTitle => 'Vérifiez vos e-mails';
+
+  @override
+  String get checkEmailMessage =>
+      'Nous avons envoyé un lien de confirmation. Confirmez-le, puis connectez-vous.';
+
+  @override
+  String get authFailed =>
+      'Échec de la connexion. Vérifiez vos informations et réessayez.';
+
+  @override
+  String get tagline => 'Les tâches, ensemble.';
+
+  @override
+  String get friendCodeHint => 'ABC123';
+
+  @override
+  String get logoutMessage =>
+      'Vous devrez vous reconnecter pour accéder à vos tâches.';
+
+  @override
+  String get genericError => 'Une erreur est survenue. Réessayez.';
+
+  @override
+  String get orContinueWith => 'ou continuer avec';
 }

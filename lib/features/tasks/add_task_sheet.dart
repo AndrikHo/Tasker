@@ -55,12 +55,13 @@ class _AddTaskSheetState extends ConsumerState<_AddTaskSheet> {
   void _add() {
     final title = _controller.text.trim();
     if (title.isEmpty) return;
+    final me = ref.read(currentMemberProvider);
     ref.read(tasksProvider.notifier).add(
           widget.listId,
           TaskItem(
             id: 't_${DateTime.now().microsecondsSinceEpoch}',
             title: title,
-            assignees: const [DemoMembers.me],
+            assignees: [me],
             priority: _priority,
           ),
         );

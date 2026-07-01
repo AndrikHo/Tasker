@@ -59,5 +59,21 @@
   "priorityHigh": "緊急",
   "priorityMedium": "中",
   "priorityLow": "低",
-  "needsAttention": "要対応"
+  "needsAttention": "要対応",
+  "signIn": "ログイン",
+  "createAccount": "アカウント作成",
+  "email": "メール",
+  "password": "パスワード",
+  "emailInvalid": "有効なメールアドレスを入力してください",
+  "passwordTooShort": "パスワードは6文字以上にしてください",
+  "noAccountPrompt": "はじめてですか？アカウントを作成",
+  "haveAccountPrompt": "アカウントをお持ちですか？ログイン",
+  "checkEmailTitle": "メールを確認してください",
+  "checkEmailMessage": "確認リンクを送信しました。確認後にログインしてください。",
+  "authFailed": "ログインに失敗しました。情報を確認して再試行してください。",
+  "tagline": "タスクを、みんなで。",
+  "friendCodeHint": "ABC123",
+  "logoutMessage": "タスクにアクセスするには再度ログインが必要です。",
+  "genericError": "問題が発生しました。再試行してください。",
+  "orContinueWith": "または次で続行"
 }

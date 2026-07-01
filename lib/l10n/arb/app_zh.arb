@@ -59,5 +59,21 @@
   "priorityHigh": "紧急",
   "priorityMedium": "中等",
   "priorityLow": "低",
-  "needsAttention": "需要关注"
+  "needsAttention": "需要关注",
+  "signIn": "登录",
+  "createAccount": "创建账户",
+  "email": "电子邮件",
+  "password": "密码",
+  "emailInvalid": "请输入有效的电子邮件",
+  "passwordTooShort": "密码至少需要 6 个字符",
+  "noAccountPrompt": "第一次使用？创建一个账户",
+  "haveAccountPrompt": "已有账户？立即登录",
+  "checkEmailTitle": "请查收邮件",
+  "checkEmailMessage": "我们已发送确认链接。确认后即可登录。",
+  "authFailed": "登录失败。请检查信息后重试。",
+  "tagline": "一起完成任务。",
+  "friendCodeHint": "ABC123",
+  "logoutMessage": "你需要重新登录才能访问任务。",
+  "genericError": "出错了，请重试。",
+  "orContinueWith": "或使用以下方式继续"
 }

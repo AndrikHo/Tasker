@@ -45,6 +45,9 @@ abstract class TaskerRepository {
   /// Toggles done state, recording who completed it.
   Future<void> setTaskDone(String taskId, {required bool done, String? byMemberId});
 
+  /// Updates a task's priority.
+  Future<void> setTaskPriority(String taskId, Priority priority);
+
   Future<void> deleteTask(String taskId);
 
   // --- sharing ------------------------------------------------------------

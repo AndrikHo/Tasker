@@ -5,6 +5,7 @@ import 'core/providers/settings_provider.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'core/widgets/ambient_background.dart';
+import 'data/profile/profile_sync.dart';
 import 'features/buddies/buddy_overlay.dart';
 import 'l10n/app_localizations.dart';
 
@@ -13,6 +14,10 @@ class TaskerApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Keep the backend profile in sync with the local profile for the lifetime
+    // of the app (no-op in local demo mode).
+    ref.watch(profileSyncProvider);
+
     final router = ref.watch(routerProvider);
     final themeMode = ref.watch(themeModeProvider);
     final locale = ref.watch(localeProvider);

@@ -477,6 +477,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Needs attention'**
   String get needsAttention;
+
+  /// No description provided for @signIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in'**
+  String get signIn;
+
+  /// No description provided for @createAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Create account'**
+  String get createAccount;
+
+  /// No description provided for @email.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get email;
+
+  /// No description provided for @password.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get password;
+
+  /// No description provided for @emailInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid email'**
+  String get emailInvalid;
+
+  /// No description provided for @passwordTooShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be at least 6 characters'**
+  String get passwordTooShort;
+
+  /// No description provided for @noAccountPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'New here? Create an account'**
+  String get noAccountPrompt;
+
+  /// No description provided for @haveAccountPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Have an account? Sign in'**
+  String get haveAccountPrompt;
+
+  /// No description provided for @checkEmailTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Check your email'**
+  String get checkEmailTitle;
+
+  /// No description provided for @checkEmailMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'We sent a confirmation link. Confirm it, then sign in.'**
+  String get checkEmailMessage;
+
+  /// No description provided for @authFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in failed. Check your details and try again.'**
+  String get authFailed;
+
+  /// No description provided for @tagline.
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks, together.'**
+  String get tagline;
+
+  /// No description provided for @friendCodeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'ABC123'**
+  String get friendCodeHint;
+
+  /// No description provided for @logoutMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'You will need to sign in again to access your tasks.'**
+  String get logoutMessage;
+
+  /// No description provided for @genericError.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Try again.'**
+  String get genericError;
+
+  /// Divider label above social sign-in buttons
+  ///
+  /// In en, this message translates to:
+  /// **'or continue with'**
+  String get orContinueWith;
 }
 
 class _AppLocalizationsDelegate
