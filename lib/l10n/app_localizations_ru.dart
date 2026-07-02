@@ -102,6 +102,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get style => 'Стиль';
 
   @override
+  String get character => 'Персонаж';
+
+  @override
   String get account => 'Аккаунт';
 
   @override

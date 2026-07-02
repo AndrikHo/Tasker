@@ -102,6 +102,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get style => 'Estilo';
 
   @override
+  String get character => 'Personaje';
+
+  @override
   String get account => 'Cuenta';
 
   @override

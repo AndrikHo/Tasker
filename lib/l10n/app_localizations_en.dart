@@ -102,6 +102,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get style => 'Style';
 
   @override
+  String get character => 'Character';
+
+  @override
   String get account => 'Account';
 
   @override

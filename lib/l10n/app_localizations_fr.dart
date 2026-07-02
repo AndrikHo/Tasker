@@ -102,6 +102,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get style => 'Style';
 
   @override
+  String get character => 'Personnage';
+
+  @override
   String get account => 'Compte';
 
   @override

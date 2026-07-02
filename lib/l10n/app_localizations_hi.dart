@@ -102,6 +102,9 @@ class AppLocalizationsHi extends AppLocalizations {
   String get style => 'शैली';
 
   @override
+  String get character => 'किरदार';
+
+  @override
   String get account => 'खाता';
 
   @override

@@ -102,6 +102,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get style => 'Gaya';
 
   @override
+  String get character => 'Karakter';
+
+  @override
   String get account => 'Akun';
 
   @override

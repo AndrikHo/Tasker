@@ -304,6 +304,12 @@ abstract class AppLocalizations {
   /// **'Style'**
   String get style;
 
+  /// No description provided for @character.
+  ///
+  /// In en, this message translates to:
+  /// **'Character'**
+  String get character;
+
   /// No description provided for @account.
   ///
   /// In en, this message translates to:

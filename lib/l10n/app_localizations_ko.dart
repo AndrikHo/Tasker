@@ -102,6 +102,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get style => '스타일';
 
   @override
+  String get character => '캐릭터';
+
+  @override
   String get account => '계정';
 
   @override

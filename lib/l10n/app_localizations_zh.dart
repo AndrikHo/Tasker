@@ -102,6 +102,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get style => '样式';
 
   @override
+  String get character => '角色';
+
+  @override
   String get account => '账户';
 
   @override

@@ -102,6 +102,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get style => 'النمط';
 
   @override
+  String get character => 'الشخصية';
+
+  @override
   String get account => 'الحساب';
 
   @override

@@ -94,24 +94,29 @@ class SettingsScreen extends ConsumerWidget {
                           ref.read(buddyEnabledProvider.notifier).set(v),
                     ),
                   ),
+                  _GroupDivider(),
+                  SettingsTile(
+                    icon: Icons.face_retouching_natural,
+                    title: l10n.character,
+                    subtitle: character.name,
+                    onTap: () => _showCharacterPicker(context, ref),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        CharacterArt(character: character, size: 30),
+                        const SizedBox(width: 8),
+                        Icon(
+                          Icons.chevron_right,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurfaceVariant
+                              .withValues(alpha: 0.7),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
-            ),
-            const SizedBox(height: 24),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(kBentoPad + 6, 0, kBentoPad, 12),
-              child: Text(
-                l10n.style.toUpperCase(),
-                style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: 1.2,
-                    ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: kBentoPad),
-              child: _CharacterGallery(current: character),
             ),
           ],
         ),
@@ -143,6 +148,54 @@ class SettingsScreen extends ConsumerWidget {
           ],
         ),
       ),
+    );
+  }
+
+  void _showCharacterPicker(BuildContext context, WidgetRef ref) {
+    showModalBottomSheet<void>(
+      context: context,
+      showDragHandle: true,
+      isScrollControlled: true,
+      builder: (context) {
+        final l10n = AppLocalizations.of(context);
+        final maxHeight = MediaQuery.sizeOf(context).height * 0.8;
+        return SafeArea(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxHeight: maxHeight),
+            child: Consumer(
+              builder: (context, ref, _) {
+                final current = ref.watch(characterProvider);
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(
+                          kBentoPad + 6, 0, kBentoPad, 12),
+                      child: Text(
+                        l10n.character,
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                              fontWeight: FontWeight.w800,
+                            ),
+                      ),
+                    ),
+                    Flexible(
+                      child: SingleChildScrollView(
+                        padding: const EdgeInsets.fromLTRB(
+                            kBentoPad, 0, kBentoPad, 12),
+                        child: _CharacterGallery(
+                          current: current,
+                          onPicked: () => Navigator.pop(context),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+        );
+      },
     );
   }
 }
@@ -230,10 +283,13 @@ class _LanguageRow extends ConsumerWidget {
 }
 
 /// The character picker as a 2-up bento grid. Picking a character sets the
-/// profile avatar and drives the whole app theme (its [Character.look]).
+/// profile avatar and drives the whole app theme (its [Character.look]), then
+/// fires [onPicked] so the host sheet can close.
 class _CharacterGallery extends ConsumerWidget {
-  const _CharacterGallery({required this.current});
+  const _CharacterGallery({required this.current, this.onPicked});
+
   final Character current;
+  final VoidCallback? onPicked;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -251,9 +307,12 @@ class _CharacterGallery extends ConsumerWidget {
                       ? _CharacterCard(
                           character: items[row + col],
                           selected: items[row + col].id == current.id,
-                          onTap: () => ref
-                              .read(characterProvider.notifier)
-                              .set(items[row + col]),
+                          onTap: () {
+                            ref
+                                .read(characterProvider.notifier)
+                                .set(items[row + col]);
+                            onPicked?.call();
+                          },
                         )
                       : const SizedBox.shrink(),
                 ),

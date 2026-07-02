@@ -102,6 +102,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get style => 'Estilo';
 
   @override
+  String get character => 'Personagem';
+
+  @override
   String get account => 'Conta';
 
   @override
